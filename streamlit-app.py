@@ -3,6 +3,8 @@ import cv2
 import mediapipe as mp
 from only_hands import handTracker
 from only_hands import keypoints_preprocessor
+from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
+from dummy_webrtc import VideoTransformer
 #from tensorflow import models
 
 #model = models.load_model('models/NN_from_keypoints')
@@ -25,20 +27,21 @@ col4, col5 = st.columns(2)
 
 #Left column to show webcam
 with col4:
-    run = st.checkbox('Run')
-    FRAME_WINDOW = st.image([])
-    camera = cv2.VideoCapture(0)
-    tracker = handTracker()
-    p = st.empty()
-    while run:
-        _, frame = camera.read()
-        frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        frame = tracker.handsFinder(frame)
-        lmList = tracker.positionFinder(frame)
-        FRAME_WINDOW.image(frame)
-        #print(lmList)
-        if len(lmList)==21:
-            p.write(keypoints_preprocessor(lmList))
+    # run = st.checkbox('Run')
+    # FRAME_WINDOW = st.image([])
+    # camera = cv2.VideoCapture(0)
+    # tracker = handTracker()
+    # p = st.empty()
+    # while run:
+    #     _, frame = camera.read()
+    #     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    #     frame = tracker.handsFinder(frame)
+    #     lmList = tracker.positionFinder(frame)
+    #     FRAME_WINDOW.image(frame)
+    #     #print(lmList)
+    #     if len(lmList)==21:
+    #         p.write(keypoints_preprocessor(lmList))
+    webrtc_streamer(key="example", video_transformer_factory=VideoTransformer)
 
 #Right column to show prediction
 with col5:
