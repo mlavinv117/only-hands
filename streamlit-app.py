@@ -40,7 +40,7 @@ with col4:
     #     #print(lmList)
     #     if len(lmList)==21:
     #         p.write(keypoints_preprocessor(lmList))
-    webrtc_streamer(key="example", video_transformer_factory=tracker)
+webrtc_streamer(key="example", video_transformer_factory=tracker)
 
 #Right column to show prediction
 with col5:
