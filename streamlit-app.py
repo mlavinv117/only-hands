@@ -7,10 +7,6 @@ from only_hands import keypoints_preprocessor
 
 #model = models.load_model('models/NN_from_keypoints')
 
-#App layout
-picture = st.camera_input("Take a picture")
-if picture:
-    st.image(picture)
 st.set_page_config(layout='wide')
 col1, col2, col3 = st.columns(3)
 
