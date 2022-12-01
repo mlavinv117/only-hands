@@ -8,7 +8,7 @@ from only_hands import keypoints_preprocessor
 #model = models.load_model('models/NN_from_keypoints')
 
 #App layout
-st.input_camara('webcam')
+st.camara_input('webcam')
 st.set_page_config(layout='wide')
 col1, col2, col3 = st.columns(3)
 
