@@ -1,5 +1,6 @@
 import streamlit as st
 import cv2
+import av
 import mediapipe as mp
 from only_hands import handTracker
 from only_hands import keypoints_preprocessor
@@ -40,14 +41,12 @@ with col4:
     #     #print(lmList)
     #     if len(lmList)==21:
     #         p.write(keypoints_preprocessor(lmList))
-    webrtc_ctx = webrtc_streamer(key="WYH",
+    RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
+    webrtc_ctx = webrtc_streamer(key="TEST",
                                  mode=WebRtcMode.SENDRECV,
-                                 rtc_configuration=RTCConfiguration(
-                                     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}),
+                                 rtc_configuration=RTC_CONFIGURATION,
                                  media_stream_constraints={"video": True, "audio": False},
-                                 #video_processor_factory=handTracker,
-                                 async_processing=True,
-)
+                                 async_processing=True,)
 
 #Right column to show prediction
 with col5:
