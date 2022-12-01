@@ -1,8 +1,9 @@
 import cv2
 import mediapipe as mp
 import pandas as pd
+from streamlit_webrtc import VideoTransformerBase, webrtc_streamer
 
-class handTracker():
+class handTracker(VideoTransformerBase):
     def __init__(self, mode=False, maxHands=2, detectionCon=0.5,modelComplexity=1,trackCon=0.5):
         self.mode = mode
         self.maxHands = maxHands
