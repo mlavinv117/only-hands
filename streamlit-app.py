@@ -45,7 +45,7 @@ with col4:
                                  rtc_configuration=RTCConfiguration(
                                      {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}),
                                  media_stream_constraints={"video": True, "audio": False},
-                                 video_processor_factory=handTracker,
+                                 #video_processor_factory=handTracker,
                                  async_processing=True,
 )
 
