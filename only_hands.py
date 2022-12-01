@@ -38,6 +38,10 @@ class handTracker():
 
         return lmlist
 
+    def transform(self, frame):
+        frame = self.handsFinder(frame)
+        return frame
+
 def keypoints_preprocessor(keypoints):
     data = {}
     i=0
