@@ -40,7 +40,14 @@ with col4:
     #     #print(lmList)
     #     if len(lmList)==21:
     #         p.write(keypoints_preprocessor(lmList))
-    webrtc_streamer(key="example", video_processor_factory=handTracker)
+    webrtc_ctx = webrtc_streamer(key="WYH",
+                                 mode=WebRtcMode.SENDRECV,
+                                 rtc_configuration=RTCConfiguration(
+                                     {"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]}),
+                                 media_stream_constraints={"video": True, "audio": False},
+                                 video_processor_factory=handTracker,
+                                 async_processing=True,
+)
 
 #Right column to show prediction
 with col5:
