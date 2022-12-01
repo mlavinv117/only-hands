@@ -16,7 +16,7 @@ with col1:
     st.write(' ')
 
 with col2:
-    st.image('/Users/manuel/Pictures/only_hands_logo.png')
+    st.image('data/only_hands_logo.png')
 
 with col3:
     st.write(' ')
