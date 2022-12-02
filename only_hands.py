@@ -108,3 +108,68 @@ class handTracker(VideoTransformerBase):
                                 thickness = 2,)
 
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
+
+class handTracker_nodraw(VideoTransformerBase):
+    def __init__(self, mode=False, maxHands=1, detectionCon=0.5,modelComplexity=1,trackCon=0.5):
+        self.mode = mode
+        self.maxHands = maxHands
+        self.detectionCon = detectionCon
+        self.modelComplex = modelComplexity
+        self.trackCon = trackCon
+        self.mpHands = mp.solutions.hands
+        self.hands = self.mpHands.Hands(self.mode, self.maxHands,self.modelComplex,
+                                        self.detectionCon, self.trackCon)
+        self.mpDraw = mp.solutions.drawing_utils
+
+    def handsFinder(self,image,draw=False):
+        imageRGB = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+        self.results = self.hands.process(imageRGB)
+
+        if self.results.multi_hand_landmarks:
+            for handLms in self.results.multi_hand_landmarks:
+
+                if draw:
+                    self.mpDraw.draw_landmarks(image, handLms, self.mpHands.HAND_CONNECTIONS)
+        return image
+
+    def positionFinder(self,image, handNo=0, draw=False):
+        lmlist = []
+        if self.results.multi_hand_landmarks:
+            Hand = self.results.multi_hand_landmarks[handNo]
+            for id, lm in enumerate(Hand.landmark):
+                h,w,c = image.shape
+                cx,cy = int(lm.x*w), int(lm.y*h)
+                lmlist.append([id,cx,cy])
+            if draw:
+                cv2.circle(image,(cx,cy), 5 , (255,0,255), cv2.FILLED)
+
+        return lmlist
+
+    def recv(self, frame):
+        frame = frame.to_ndarray(format="bgr24")
+        frame = self.handsFinder(frame)
+        keypoints = self.positionFinder(frame)
+
+        if len(keypoints)==21:
+            keypoints, avg_w, min_h = keypoints_preprocessor(keypoints)
+            if min_h-25 <= 0:
+                min_h = 50
+            if avg_w-25 <= 0:
+                avg_w = 50
+            model = load_model_from_cache()
+            prediction = model.predict(keypoints)
+            y_pred = prediction_postprocessor(prediction)
+            frame = cv2.rectangle(frame,
+                                  (avg_w -5, min_h - 50),
+                                  (avg_w + 25, min_h - 20),
+                                  (255, 255, 255),
+                                  -1)
+            frame = cv2.putText(frame,
+                                y_pred,
+                                org = (avg_w, min_h - 25),
+                                fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+                                fontScale = 1,
+                                color = (255, 0, 0),
+                                thickness = 2,)
+
+        return av.VideoFrame.from_ndarray(frame, format="bgr24")

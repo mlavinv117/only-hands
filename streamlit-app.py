@@ -3,6 +3,7 @@ import cv2
 import av
 import mediapipe as mp
 from only_hands import handTracker
+from only_hands import handTracker_nodraw
 from only_hands import keypoints_preprocessor
 from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
 from tensorflow.keras import models
@@ -13,8 +14,8 @@ st.set_page_config(page_title="Only Hands",
                    initial_sidebar_state="auto",
                    menu_items=None)
 
-# with st.sidebar:
-#     keypoints_checkbox = st.checkbox('Show keypoints')
+with st.sidebar:
+    keypoints_checkbox = st.checkbox('Show keypoints')
 
 #st.set_page_config(layout='wide')
 col1, col2, col3 = st.columns(3)
@@ -47,14 +48,22 @@ with tab1:
                     }]
                 }
             )
-        webrtc_ctx = webrtc_streamer(
-            key="WYH",
-            mode=WebRtcMode.SENDRECV,
-            rtc_configuration=RTC_CONFIGURATION,
-            media_stream_constraints={"video": True, "audio": False},
-            video_processor_factory=handTracker,
-            async_processing=True,)
-
+        if keypoints_checkbox:
+            webrtc_ctx = webrtc_streamer(
+                key="WYH",
+                mode=WebRtcMode.SENDRECV,
+                rtc_configuration=RTC_CONFIGURATION,
+                media_stream_constraints={"video": True, "audio": False},
+                video_processor_factory=handTracker,
+                async_processing=True,)
+        else:
+            webrtc_ctx = webrtc_streamer(
+                key="WYH",
+                mode=WebRtcMode.SENDRECV,
+                rtc_configuration=RTC_CONFIGURATION,
+                media_stream_constraints={"video": True, "audio": False},
+                video_processor_factory=handTracker_nodraw,
+                async_processing=True,)
     with col5:
         st.image('data/amer_sign2.png')
 with tab2:
