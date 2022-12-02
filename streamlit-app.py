@@ -41,7 +41,7 @@ with col4:
     #     #print(lmList)
     #     if len(lmList)==21:
     #         p.write(keypoints_preprocessor(lmList))
-    RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stunserver.org"]}]})
+    RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun:stun.l.google.com:49455"]}]})
     webrtc_ctx = webrtc_streamer(
     key="WYH",
     mode=WebRtcMode.SENDRECV,
