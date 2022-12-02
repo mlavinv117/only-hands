@@ -1,6 +1,7 @@
 import cv2
 import mediapipe as mp
 import pandas as pd
+import av
 from streamlit_webrtc import VideoTransformerBase, webrtc_streamer
 
 class handTracker(VideoTransformerBase):
@@ -39,10 +40,10 @@ class handTracker(VideoTransformerBase):
 
         return lmlist
 
-    def transform(self, frame):
+    def recv(self, frame):
         frame = frame.to_ndarray(format="bgr24")
         frame = self.handsFinder(frame)
-        return frame
+        return av.VideoFrame.from_ndarray(frame, format="bgr24")
 
 def keypoints_preprocessor(keypoints):
     data = {}
