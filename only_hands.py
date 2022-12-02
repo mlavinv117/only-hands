@@ -7,8 +7,8 @@ from tensorflow.keras import models
 import numpy as np
 import streamlit as st
 
-@st.cache(ttl=60, max_entries=10)
-def load_model():
+@st.cache()
+def load_model_from_cache():
     model = models.load_model('models/NN_from_keypoints')
     return model
 
@@ -45,7 +45,8 @@ def prediction_postprocessor(prediction):
         return None
 
 class handTracker(VideoTransformerBase):
-    def __init__(self, mode=False, maxHands=2, detectionCon=0.5,modelComplexity=1,trackCon=0.5):
+    def __init__(self, mode=False, maxHands=1, detectionCon=0.5,modelComplexity=1,trackCon=0.5):
+        self.i = 0
         self.mode = mode
         self.maxHands = maxHands
         self.detectionCon = detectionCon
@@ -84,9 +85,9 @@ class handTracker(VideoTransformerBase):
         frame = frame.to_ndarray(format="bgr24")
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
-        if len(keypoints)==21:
+        if len(keypoints)==21 and i==19:
             keypoints, avg_w, min_h = keypoints_preprocessor(keypoints)
-            model = load_model()
+            model = load_model_from_cache()
             prediction = model.predict(keypoints)
             y_pred = prediction_postprocessor(prediction)
             if y_pred:
@@ -97,4 +98,7 @@ class handTracker(VideoTransformerBase):
                                     fontScale = 1,
                                     color = (255, 0, 0),
                                     thickness = 2,)
+        if i==20:
+            i=0
+        i+=1
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
