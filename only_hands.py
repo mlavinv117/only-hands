@@ -97,7 +97,7 @@ class handTracker(VideoTransformerBase):
             frame = cv2.rectangle(frame,
                                   start_point=(avg_w - 25, min_h - 25),
                                   end_point = (avg_w + 25, min_h + 25),
-                                  color=(255, 255, 255),
+                                  color=(0, 0, 0),
                                   thickness=-1)
             frame = cv2.putText(frame,
                                 y_pred,
