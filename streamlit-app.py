@@ -43,10 +43,10 @@ with col4:
     #         p.write(keypoints_preprocessor(lmList))
     RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
     webrtc_ctx = webrtc_streamer(key="TEST",
-                                 #mode=WebRtcMode.SENDRECV,
+                                 mode=WebRtcMode.SENDRECV,
                                  rtc_configuration=RTC_CONFIGURATION,
-                                 #media_stream_constraints={"video": True, "audio": False},
-                                 #async_processing=True,
+                                 media_stream_constraints={"video": True, "audio": False},
+                                 async_processing=False,
                                  )
 
 #Right column to show prediction
