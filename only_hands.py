@@ -20,13 +20,13 @@ def keypoints_preprocessor(keypoints):
     for keypoint in keypoints:
         data[str(i) + '_h'] = [keypoint[1]]
         data[str(i) + '_w'] = [keypoint[2]]
-        hs.append(keypoint[1])
-        ws.append(keypoint[2])
+        ws.append(keypoint[1])
+        hs.append(keypoint[2])
         i+=1
-    max_w = max(ws)
-    avg_h = int(round(sum(hs)/len(hs),0))
+    min_h = min(hs)
+    avg_w = int(round(sum(ws)/len(ws),0))
     data_df = pd.DataFrame.from_dict(data)
-    return data_df, max_w, avg_h
+    return data_df, avg_w, min_h
 
 def prediction_postprocessor(prediction):
     nums_to_letters = {
@@ -85,14 +85,14 @@ class handTracker(VideoTransformerBase):
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
         if len(keypoints)==21:
-            keypoints, max_w, avg_h = keypoints_preprocessor(keypoints)
+            keypoints, avg_w, min_h = keypoints_preprocessor(keypoints)
             model = load_model()
             prediction = model.predict(keypoints)
             y_pred = prediction_postprocessor(prediction)
             if y_pred:
                 frame = cv2.putText(frame,
                                     y_pred,
-                                    org = (max_w, avg_h),
+                                    org = (avg_w, min_h),
                                     fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                     fontScale = 1,
                                     color = (255, 0, 0),
