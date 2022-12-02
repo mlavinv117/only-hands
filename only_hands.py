@@ -26,7 +26,7 @@ def keypoints_preprocessor(keypoints):
     max_w = max(ws)
     avg_h = int(round(sum(hs)/len(hs),0))
     data_df = pd.DataFrame.from_dict(data)
-    return data_df, max_h, avg_w
+    return data_df, max_w, avg_h
 
 def prediction_postprocessor(prediction):
     nums_to_letters = {
