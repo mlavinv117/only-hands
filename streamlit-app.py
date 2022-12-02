@@ -7,8 +7,6 @@ from only_hands import keypoints_preprocessor
 from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
 from tensorflow.keras import models
 
-model = models.load_model('models/NN_from_keypoints')
-
 st.set_page_config(layout='wide')
 col1, col2, col3 = st.columns(3)
 
@@ -26,37 +24,20 @@ with col3:
 col4, col5 = st.columns(2)
 
 #Left column to show webcam
-with col4:
 
-    RTC_CONFIGURATION = RTCConfiguration(
-        {
-            "iceServers": [{
-                "urls": ["turn:openrelay.metered.ca:80"],
-                "username": "openrelayproject",
-                "credential": "openrelayproject",
-                }]
-            }
-        )
-    webrtc_ctx = webrtc_streamer(
-        key="WYH",
-        mode=WebRtcMode.SENDRECV,
-        rtc_configuration=RTC_CONFIGURATION,
-        media_stream_constraints={"video": True, "audio": False},
-        video_processor_factory=handTracker,
-        async_processing=True,
-)
-
-#Right column to show prediction
-with col5:
-    with st.container():
-        st.write(' ')
-        st.write(' ')
-        st.write(' ')
-        st.write(' ')
-        st.write(' ')
-        st.write(' ')
-        st.write(' ')
-        st.write(' ')
-        st.write(' ')
-        st.markdown("<h1 style='text-align: center; color: grey; vertical-align:middle;'>Translated letter:</h1>", unsafe_allow_html=True)
-        st.markdown("<h2 style='text-align: center; color: grey; vertical-align:middle;'>B</h2>", unsafe_allow_html=True)
+RTC_CONFIGURATION = RTCConfiguration(
+    {
+        "iceServers": [{
+            "urls": ["turn:openrelay.metered.ca:80"],
+            "username": "openrelayproject",
+            "credential": "openrelayproject",
+            }]
+        }
+    )
+webrtc_ctx = webrtc_streamer(
+    key="WYH",
+    mode=WebRtcMode.SENDRECV,
+    rtc_configuration=RTC_CONFIGURATION,
+    media_stream_constraints={"video": True, "audio": False},
+    video_processor_factory=handTracker,
+    async_processing=True,)
