@@ -18,7 +18,7 @@ with st.sidebar:
     keypoints_checkbox = st.checkbox('Show keypoints')
     model_options = st.selectbox(
     'Select a model',
-    ('NN from keypoints'))
+    ('NN from keypoints',))
 
 #st.set_page_config(layout='wide')
 col1, col2, col3 = st.columns(3)
