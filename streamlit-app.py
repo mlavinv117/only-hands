@@ -24,7 +24,7 @@ with col3:
     st.write(' ')
 
 
-tab1, tab2 = st.tabs(['App, Reference'])
+tab1, tab2 = st.tabs(['App', 'Reference'])
 
 with tab1:
     RTC_CONFIGURATION = RTCConfiguration(
