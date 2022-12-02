@@ -86,6 +86,10 @@ class handTracker(VideoTransformerBase):
         keypoints = self.positionFinder(frame)
         if len(keypoints)==21:
             keypoints, max_h, avg_w = keypoints_preprocessor(keypoints)
+            if max_h<50:
+                max_h = 50
+            if avg_w<50:
+                avg_w = 50
             model = load_model()
             prediction = model.predict(keypoints)
             y_pred = prediction_postprocessor(prediction)
