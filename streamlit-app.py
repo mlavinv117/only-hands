@@ -41,14 +41,14 @@ with col4:
     #     #print(lmList)
     #     if len(lmList)==21:
     #         p.write(keypoints_preprocessor(lmList))
-    RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
+    RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun1.l.google.com:19302"]}]})
     webrtc_ctx = webrtc_streamer(
     key="WYH",
     mode=WebRtcMode.SENDRECV,
     rtc_configuration=RTC_CONFIGURATION,
     media_stream_constraints={"video": True, "audio": False},
     #video_processor_factory=VideoProcessor,
-    #async_processing=True,
+    async_processing=True,
 )
 
 #Right column to show prediction
