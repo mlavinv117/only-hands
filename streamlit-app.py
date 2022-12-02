@@ -5,9 +5,9 @@ import mediapipe as mp
 from only_hands import handTracker
 from only_hands import keypoints_preprocessor
 from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
-#from tensorflow import models
+from tensorflow import models
 
-#model = models.load_model('models/NN_from_keypoints')
+model = models.load_model('models/NN_from_keypoints')
 
 st.set_page_config(layout='wide')
 col1, col2, col3 = st.columns(3)
