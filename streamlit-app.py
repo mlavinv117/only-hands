@@ -21,7 +21,7 @@ with col3:
     st.write(' ')
 
 #Main body with 2 columns to split webcam and prediction
-col4, col5, col6 = st.columns(2)
+col4, col5, col6 = st.columns(3)
 
 #Left column to show webcam
 
