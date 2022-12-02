@@ -46,7 +46,6 @@ def prediction_postprocessor(prediction):
 
 class handTracker(VideoTransformerBase):
     def __init__(self, mode=False, maxHands=1, detectionCon=0.5,modelComplexity=1,trackCon=0.5):
-        self.i = 0
         self.mode = mode
         self.maxHands = maxHands
         self.detectionCon = detectionCon
@@ -85,27 +84,18 @@ class handTracker(VideoTransformerBase):
         frame = frame.to_ndarray(format="bgr24")
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
-        i=self.i
 
         if len(keypoints)==21:
-            if i%6==0:
-                keypoints, avg_w, min_h = keypoints_preprocessor(keypoints)
-                model = load_model_from_cache()
-                prediction = model.predict(keypoints)
-                y_pred = prediction_postprocessor(prediction)
-            try:
-                if y_pred:
-                    frame = cv2.putText(frame,
-                                        y_pred,
-                                        org = (avg_w, min_h-25),
-                                        fontFace = cv2.FONT_HERSHEY_SIMPLEX,
-                                        fontScale = 1,
-                                        color = (255, 0, 0),
-                                        thickness = 2,)
-            except:
-                pass
-        if i==60:
-            self.i=0
-        else:
-            self.i+=1
+            keypoints, avg_w, min_h = keypoints_preprocessor(keypoints)
+            model = load_model_from_cache()
+            prediction = model.predict(keypoints)
+            y_pred = prediction_postprocessor(prediction)
+            frame = cv2.putText(frame,
+                                y_pred,
+                                org = (avg_w, min_h-25),
+                                fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+                                fontScale = 1,
+                                color = (255, 0, 0),
+                                thickness = 2,)
+
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
