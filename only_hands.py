@@ -104,7 +104,7 @@ class handTracker(VideoTransformerBase):
                                 org = (avg_w, min_h - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
-                                color = (255, , 0),
+                                color = (255, 0, 0),
                                 thickness = 2,)
 
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
