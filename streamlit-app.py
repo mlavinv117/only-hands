@@ -7,6 +7,12 @@ from only_hands import keypoints_preprocessor
 from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
 from tensorflow.keras import models
 
+st.set_page_config(page_title="Only Hands",
+                   page_icon="👌",
+                   layout="wide",
+                   initial_sidebar_state="auto",
+                   menu_items=None)
+
 # with st.sidebar:
 #     keypoints_checkbox = st.checkbox('Show keypoints')
 
