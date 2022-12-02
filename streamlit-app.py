@@ -27,12 +27,12 @@ col4, col5 = st.columns(2)
 
 #Left column to show webcam
 with col4:
-    run = st.checkbox('Run')
+    #run = st.checkbox('Run')
     # FRAME_WINDOW = st.image([])
     # camera = cv2.VideoCapture(0)
     # tracker = handTracker()
     # p = st.empty()
-    while run:
+    #while run:
     #     _, frame = camera.read()
     #     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
     #     frame = tracker.handsFinder(frame)
@@ -41,8 +41,8 @@ with col4:
     #     #print(lmList)
     #     if len(lmList)==21:
     #         p.write(keypoints_preprocessor(lmList))
-        RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
-        webrtc_ctx = webrtc_streamer(key="TEST",
+    RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:19302"]}]})
+    webrtc_ctx = webrtc_streamer(key="TEST",
                                  #mode=WebRtcMode.SENDRECV,
                                  #rtc_configuration=RTC_CONFIGURATION,
                                  #media_stream_constraints={"video": True, "audio": False},
