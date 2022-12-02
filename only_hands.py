@@ -40,6 +40,7 @@ class handTracker(VideoTransformerBase):
         return lmlist
 
     def transform(self, frame):
+        frame = frame.to_ndarray(format="bgr24")
         frame = self.handsFinder(frame)
         return frame
 
