@@ -3,29 +3,6 @@ import mediapipe as mp
 import pandas as pd
 import av
 from streamlit_webrtc import VideoTransformerBase, webrtc_streamer
-from tensorflow.keras import models
-import numpy as np
-
-def keypoints_preprocessor(keypoints):
-    data = {}
-    i=0
-    for keypoint in keypoints:
-        data[str(i) + '_h'] = [keypoint[1]]
-        data[str(i) + '_w'] = [keypoint[2]]
-        i+=1
-    data_df = pd.DataFrame.from_dict(data)
-    return data_df
-
-def prediction_postprocessor(prediction):
-    nums_to_letters = {
-        0:'A',1:'B',2:'C',3:'D',4:'E',5:'F',6:'G',
-        7:'H',8:'I',9:'J',10:'K',11:'L',12:'M',
-        13:'N',14:'O',15:'P',16:'Q',17:'R',18:'S',
-        19:'T',20:'U',21:'V',22:'W',23:'X',24:'Y',25:'Z',
-    }
-    max_pred = np.argmax(prediction, axis=1)[0]
-    y_pred = nums_to_letters[max_pred]
-    return y_pred
 
 class handTracker(VideoTransformerBase):
     def __init__(self, mode=False, maxHands=2, detectionCon=0.5,modelComplexity=1,trackCon=0.5):
@@ -66,16 +43,14 @@ class handTracker(VideoTransformerBase):
     def recv(self, frame):
         frame = frame.to_ndarray(format="bgr24")
         frame = self.handsFinder(frame)
-        keypoints = self.positionFinder(frame)
-        keypoints = keypoints_preprocessor(keypoints)
-        model = models.load_model('models/NN_from_keypoints')
-        prediction = model.predict(keypoints)
-        y_pred = prediction_postprocessor(prediction)
-        frame = cv2.putText(frame,
-                            y_pred,
-                            org = (50,50),
-                            font = cv2.FONT_HERSHEY_SIMPLEX,
-                            fontScale = 1,
-                            color = (255, 0, 0),
-                            thickness = 2,)
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
+
+def keypoints_preprocessor(keypoints):
+    data = {}
+    i=0
+    for keypoint in keypoints:
+        data[str(i) + '_h'] = [keypoint[1]]
+        data[str(i) + '_w'] = [keypoint[2]]
+        i+=1
+    data_df = pd.DataFrame.from_dict(data)
+    return data_df
