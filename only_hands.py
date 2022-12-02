@@ -8,7 +8,7 @@ import numpy as np
 import streamlit as st
 
 @st.cache
-def load_model(url):
+def load_model():
     model = models.load_model('models/NN_from_keypoints')
     return model
 
