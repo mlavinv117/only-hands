@@ -6,6 +6,11 @@ from streamlit_webrtc import VideoTransformerBase, webrtc_streamer
 from tensorflow.keras import models
 import numpy as np
 
+@st.cache
+def load_model(url):
+    model = models.load_model('models/NN_from_keypoints')
+    return model
+
 def keypoints_preprocessor(keypoints):
     data = {}
     i=0
@@ -25,6 +30,7 @@ def prediction_postprocessor(prediction):
     }
     max_pred = np.argmax(prediction, axis=1)[0]
     max_prob = np.max(prediction)
+    print(max_prob)
     y_pred = nums_to_letters[max_pred]
     if max_prob>=0.80:
         return y_pred
@@ -72,7 +78,7 @@ class handTracker(VideoTransformerBase):
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
         keypoints = keypoints_preprocessor(keypoints)
-        model = models.load_model('models/NN_from_keypoints')
+        model = load_model()
         prediction = model.predict(keypoints)
         y_pred = prediction_postprocessor(prediction)
         if y_pred:
