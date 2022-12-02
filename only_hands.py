@@ -96,7 +96,7 @@ class handTracker(VideoTransformerBase):
             y_pred = prediction_postprocessor(prediction)
             frame = cv2.rectangle(frame,
                                   (avg_w -5, min_h - 50),
-                                  (avg_w + 25, min_h + 5),
+                                  (avg_w + 25, min_h - 20),
                                   (255, 255, 255),
                                   -1)
             frame = cv2.putText(frame,
