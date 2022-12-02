@@ -44,5 +44,5 @@ with tab1:
         video_processor_factory=handTracker,
         async_processing=True,)
 
-# with col6:
-#     pass
+with tab2:
+     st.image('data/amer_sign2.png')
