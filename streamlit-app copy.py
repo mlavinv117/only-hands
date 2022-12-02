@@ -27,7 +27,20 @@ col4, col5 = st.columns(2)
 
 #Left column to show webcam
 with col4:
-
+    #run = st.checkbox('Run')
+    # FRAME_WINDOW = st.image([])
+    # camera = cv2.VideoCapture(0)
+    # tracker = handTracker()
+    # p = st.empty()
+    #while run:
+    #     _, frame = camera.read()
+    #     frame = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+    #     frame = tracker.handsFinder(frame)
+    #     lmList = tracker.positionFinder(frame)
+    #     FRAME_WINDOW.image(frame)
+    #     #print(lmList)
+    #     if len(lmList)==21:
+    #         p.write(keypoints_preprocessor(lmList))
     RTC_CONFIGURATION = RTCConfiguration(
         {
             "iceServers": [{
@@ -38,12 +51,12 @@ with col4:
             }
         )
     webrtc_ctx = webrtc_streamer(
-        key="WYH",
-        mode=WebRtcMode.SENDRECV,
-        rtc_configuration=RTC_CONFIGURATION,
-        media_stream_constraints={"video": True, "audio": False},
-        video_processor_factory=handTracker,
-        async_processing=True,
+    key="WYH",
+    mode=WebRtcMode.SENDRECV,
+    rtc_configuration=RTC_CONFIGURATION,
+    media_stream_constraints={"video": True, "audio": False},
+    #video_processor_factory=VideoProcessor,
+    async_processing=True,
 )
 
 #Right column to show prediction
