@@ -41,7 +41,15 @@ with col4:
     #     #print(lmList)
     #     if len(lmList)==21:
     #         p.write(keypoints_preprocessor(lmList))
-    RTC_CONFIGURATION = RTCConfiguration({"iceServers": [{"urls": ["stun:stun.l.google.com:49455"]}]})
+    RTC_CONFIGURATION = RTCConfiguration(
+        {
+            "iceServers": [{
+                "urls": ["turn:openrelay.metered.ca:80"],
+                "username": "openrelayproject",
+                "credential": "openrelayproject",
+                }]
+            }
+        )
     webrtc_ctx = webrtc_streamer(
     key="WYH",
     mode=WebRtcMode.SENDRECV,
