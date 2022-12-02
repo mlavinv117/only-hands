@@ -24,7 +24,7 @@ def keypoints_preprocessor(keypoints):
         ws.append(keypoint[2])
         i+=1
     max_h = max(hs)
-    avg_w = int(round(sum(ws)/len(ws,0)))
+    avg_w = int(round(sum(ws)/len(ws),0))
     data_df = pd.DataFrame.from_dict(data)
     return data_df, max_h, avg_w
 
