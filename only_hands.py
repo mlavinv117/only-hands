@@ -95,10 +95,10 @@ class handTracker(VideoTransformerBase):
             prediction = model.predict(keypoints)
             y_pred = prediction_postprocessor(prediction)
             frame = cv2.rectangle(frame,
-                                  start_point=(avg_w - 25, min_h - 25),
-                                  end_point = (avg_w + 25, min_h + 25),
-                                  color=(0, 0, 0),
-                                  thickness=-1)
+                                  (avg_w - 25, min_h - 25),
+                                  (avg_w + 25, min_h + 25),
+                                  (0, 0, 0),
+                                  -1)
             frame = cv2.putText(frame,
                                 y_pred,
                                 org = (avg_w, min_h - 25),
