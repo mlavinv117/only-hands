@@ -15,7 +15,7 @@ st.set_page_config(page_title="Only Hands",
                    menu_items=None)
 
 with st.sidebar:
-    keypoints_checkbox = st.checkbox('Show keypoints')
+    keypoints_checkbox = st.checkbox('Show keypoints', value=True)
     model_options = st.selectbox(
     'Select a model',
     ('NN from keypoints',))
