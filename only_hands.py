@@ -24,8 +24,12 @@ def prediction_postprocessor(prediction):
         19:'T',20:'U',21:'V',22:'W',23:'X',24:'Y',25:'Z',
     }
     max_pred = np.argmax(prediction, axis=1)[0]
+    max_prob = np.max(prediction)
     y_pred = nums_to_letters[max_pred]
-    return y_pred
+    if max_prob>=0.80:
+        return y_pred
+    if max_prob<0.80:
+        return None
 
 class handTracker(VideoTransformerBase):
     def __init__(self, mode=False, maxHands=2, detectionCon=0.5,modelComplexity=1,trackCon=0.5):
@@ -71,11 +75,12 @@ class handTracker(VideoTransformerBase):
         model = models.load_model('models/NN_from_keypoints')
         prediction = model.predict(keypoints)
         y_pred = prediction_postprocessor(prediction)
-        frame = cv2.putText(frame,
-                            y_pred,
-                            org = (50,50),
-                            fontFace = cv2.FONT_HERSHEY_SIMPLEX,
-                            fontScale = 1,
-                            color = (255, 0, 0),
-                            thickness = 2,)
+        if y_pred:
+            frame = cv2.putText(frame,
+                                y_pred,
+                                org = (50,50),
+                                fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+                                fontScale = 1,
+                                color = (255, 0, 0),
+                                thickness = 2,)
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
