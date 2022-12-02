@@ -86,11 +86,12 @@ class handTracker(VideoTransformerBase):
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
         i=self.i
-        if len(keypoints)==21 and i%6==0:
-            keypoints, avg_w, min_h = keypoints_preprocessor(keypoints)
-            model = load_model_from_cache()
-            prediction = model.predict(keypoints)
-            y_pred = prediction_postprocessor(prediction)
+        if len(keypoints)==21:
+            if i%6==0:
+                keypoints, avg_w, min_h = keypoints_preprocessor(keypoints)
+                model = load_model_from_cache()
+                prediction = model.predict(keypoints)
+                y_pred = prediction_postprocessor(prediction)
             if y_pred:
                 frame = cv2.putText(frame,
                                     y_pred,
