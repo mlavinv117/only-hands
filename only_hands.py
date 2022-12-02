@@ -23,8 +23,8 @@ def keypoints_preprocessor(keypoints):
         hs.append(keypoint[1])
         ws.append(keypoint[2])
         i+=1
-    max_h = max(hs)
-    avg_w = int(round(sum(ws)/len(ws),0))
+    max_w = max(ws)
+    avg_h = int(round(sum(hs)/len(hs),0))
     data_df = pd.DataFrame.from_dict(data)
     return data_df, max_h, avg_w
 
@@ -92,7 +92,7 @@ class handTracker(VideoTransformerBase):
             if y_pred:
                 frame = cv2.putText(frame,
                                     y_pred,
-                                    org = (avg_w, max_h),
+                                    org = (max_h, avg_w),
                                     fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                     fontScale = 1,
                                     color = (255, 0, 0),
