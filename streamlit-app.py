@@ -27,22 +27,29 @@ with col3:
 tab1, tab2 = st.tabs(['App', 'Reference'])
 
 with tab1:
-    RTC_CONFIGURATION = RTCConfiguration(
-        {
-            "iceServers": [{
-                "urls": ["turn:openrelay.metered.ca:80"],
-                "username": "openrelayproject",
-                "credential": "openrelayproject",
-                }]
-            }
-        )
-    webrtc_ctx = webrtc_streamer(
-        key="WYH",
-        mode=WebRtcMode.SENDRECV,
-        rtc_configuration=RTC_CONFIGURATION,
-        media_stream_constraints={"video": True, "audio": False},
-        video_processor_factory=handTracker,
-        async_processing=True,)
 
+    col4, col5 = st.cols(2)
+
+    with col4:
+
+        RTC_CONFIGURATION = RTCConfiguration(
+            {
+                "iceServers": [{
+                    "urls": ["turn:openrelay.metered.ca:80"],
+                    "username": "openrelayproject",
+                    "credential": "openrelayproject",
+                    }]
+                }
+            )
+        webrtc_ctx = webrtc_streamer(
+            key="WYH",
+            mode=WebRtcMode.SENDRECV,
+            rtc_configuration=RTC_CONFIGURATION,
+            media_stream_constraints={"video": True, "audio": False},
+            video_processor_factory=handTracker,
+            async_processing=True,)
+
+    with col5:
+        st.image('data/amer_sign2.png')
 with tab2:
      st.image('data/amer_sign2.png')
