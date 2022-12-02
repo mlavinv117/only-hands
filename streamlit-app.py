@@ -28,7 +28,7 @@ tab1, tab2 = st.tabs(['App', 'Reference'])
 
 with tab1:
 
-    col4, col5 = st.cols(2)
+    col4, col5 = st.columns(2)
 
     with col4:
 
