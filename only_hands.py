@@ -74,7 +74,7 @@ class handTracker(VideoTransformerBase):
         frame = cv2.putText(frame,
                             y_pred,
                             org = (50,50),
-                            font = cv2.FONT_HERSHEY_SIMPLEX,
+                            fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                             fontScale = 1,
                             color = (255, 0, 0),
                             thickness = 2,)
