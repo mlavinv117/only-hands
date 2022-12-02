@@ -5,7 +5,7 @@ import mediapipe as mp
 from only_hands import handTracker
 from only_hands import keypoints_preprocessor
 from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
-from tensorflow import models
+from tensorflow.keras import models
 
 model = models.load_model('models/NN_from_keypoints')
 
