@@ -24,7 +24,7 @@ def keypoints_preprocessor(keypoints):
         ws.append(keypoint[2])
         i+=1
     max_h = max(hs)
-    avg_w = sum(ws)/len(ws)
+    avg_w = int(round(sum(ws)/len(ws,0)))
     data_df = pd.DataFrame.from_dict(data)
     return data_df, max_h, avg_w
 
@@ -86,10 +86,6 @@ class handTracker(VideoTransformerBase):
         keypoints = self.positionFinder(frame)
         if len(keypoints)==21:
             keypoints, max_h, avg_w = keypoints_preprocessor(keypoints)
-            if max_h>200:
-                max_h = 50
-            if avg_w>200:
-                avg_w = 50
             model = load_model()
             prediction = model.predict(keypoints)
             y_pred = prediction_postprocessor(prediction)
