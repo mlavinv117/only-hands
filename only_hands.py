@@ -78,8 +78,8 @@ class handTracker(VideoTransformerBase):
         frame = frame.to_ndarray(format="bgr24")
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
-        keypoints = keypoints_preprocessor(keypoints)
         if len(keypoints)==21:
+            keypoints = keypoints_preprocessor(keypoints)
             model = load_model()
             prediction = model.predict(keypoints)
             y_pred = prediction_postprocessor(prediction)
