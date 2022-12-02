@@ -79,15 +79,16 @@ class handTracker(VideoTransformerBase):
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
         keypoints = keypoints_preprocessor(keypoints)
-        model = load_model()
-        prediction = model.predict(keypoints)
-        y_pred = prediction_postprocessor(prediction)
-        if y_pred:
-            frame = cv2.putText(frame,
-                                y_pred,
-                                org = (50,50),
-                                fontFace = cv2.FONT_HERSHEY_SIMPLEX,
-                                fontScale = 1,
-                                color = (255, 0, 0),
-                                thickness = 2,)
+        if len(keypoints)==21:
+            model = load_model()
+            prediction = model.predict(keypoints)
+            y_pred = prediction_postprocessor(prediction)
+            if y_pred:
+                frame = cv2.putText(frame,
+                                    y_pred,
+                                    org = (50,50),
+                                    fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+                                    fontScale = 1,
+                                    color = (255, 0, 0),
+                                    thickness = 2,)
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
