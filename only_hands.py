@@ -7,7 +7,7 @@ from tensorflow.keras import models
 import numpy as np
 import streamlit as st
 
-@st.cache
+@st.cache(ttl=60, max_entries=10)
 def load_model():
     model = models.load_model('models/NN_from_keypoints')
     return model
