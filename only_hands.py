@@ -8,8 +8,8 @@ import numpy as np
 import streamlit as st
 
 @st.cache()
-def load_model_from_cache():
-    model = models.load_model('models/NN_from_keypoints')
+def load_model_from_cache(model_name):
+    model = models.load_model('models/' + model_name)
     return model
 
 def keypoints_preprocessor(keypoints):
@@ -91,7 +91,7 @@ class handTracker(VideoTransformerBase):
                 min_h = 50
             if avg_w-25 <= 0:
                 avg_w = 50
-            model = load_model_from_cache()
+            model = load_model_from_cache('NN_from_keypoints')
             prediction = model.predict(keypoints)
             y_pred = prediction_postprocessor(prediction)
             frame = cv2.rectangle(frame,
@@ -156,8 +156,91 @@ class handTracker_nodraw(VideoTransformerBase):
                 min_h = 50
             if avg_w-25 <= 0:
                 avg_w = 50
-            model = load_model_from_cache()
+            model = load_model_from_cache('NN_from_keypoints')
             prediction = model.predict(keypoints)
+            y_pred = prediction_postprocessor(prediction)
+            frame = cv2.rectangle(frame,
+                                  (avg_w -5, min_h - 50),
+                                  (avg_w + 25, min_h - 20),
+                                  (255, 255, 255),
+                                  -1)
+            frame = cv2.putText(frame,
+                                y_pred,
+                                org = (avg_w, min_h - 25),
+                                fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+                                fontScale = 1,
+                                color = (255, 0, 0),
+                                thickness = 2,)
+
+        return av.VideoFrame.from_ndarray(frame, format="bgr24")
+
+class handTracker_nodraw_CNN(VideoTransformerBase):
+    def __init__(self, mode=False, maxHands=1, detectionCon=0.5,modelComplexity=1,trackCon=0.5):
+        self.mode = mode
+        self.maxHands = maxHands
+        self.detectionCon = detectionCon
+        self.modelComplex = modelComplexity
+        self.trackCon = trackCon
+        self.mpHands = mp.solutions.hands
+        self.hands = self.mpHands.Hands(self.mode, self.maxHands,self.modelComplex,
+                                        self.detectionCon, self.trackCon)
+        self.mpDraw = mp.solutions.drawing_utils
+
+    def handsFinder(self,image,draw=False):
+        imageRGB = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+        self.results = self.hands.process(imageRGB)
+
+        if self.results.multi_hand_landmarks:
+            for handLms in self.results.multi_hand_landmarks:
+
+                if draw:
+                    self.mpDraw.draw_landmarks(image, handLms, self.mpHands.HAND_CONNECTIONS)
+        return image
+
+    def positionFinder(self,image, handNo=0, draw=False):
+        lmlist = []
+        if self.results.multi_hand_landmarks:
+            Hand = self.results.multi_hand_landmarks[handNo]
+            for id, lm in enumerate(Hand.landmark):
+                h,w,c = image.shape
+                cx,cy = int(lm.x*w), int(lm.y*h)
+                lmlist.append([id,cx,cy])
+            if draw:
+                cv2.circle(image,(cx,cy), 5 , (255,0,255), cv2.FILLED)
+
+        return lmlist
+
+    def recv(self, frame):
+        frame = frame.to_ndarray(format="bgr24")
+        frame = self.handsFinder(frame)
+        keypoints = self.positionFinder(frame)
+
+        if len(keypoints)==21:
+            max_width = 0
+            min_width = 1000000
+            max_height = 0
+            min_height = 1000000
+            for point in keypoints:
+                if point[1]>max_width:
+                    max_width=point[1]
+                if point[1]<min_width:
+                    min_width=point[1]
+                if point[2]>max_height:
+                    max_height=point[2]
+                if point[2]<min_height:
+                    min_height=point[2]
+            min_width = min_width-50
+            max_width = max_width+50
+            min_height = min_height-50
+            max_height = max_height+50
+            cropped_image = frame[min_height:max_height, min_width:max_width]
+            keypoints, avg_w, min_h = keypoints_preprocessor(keypoints)
+            if min_h-25 <= 0:
+                min_h = 50
+            if avg_w-25 <= 0:
+                avg_w = 50
+            model = load_model_from_cache('HO_Resnet_256')
+            prediction = model.predict(cropped_image)
             y_pred = prediction_postprocessor(prediction)
             frame = cv2.rectangle(frame,
                                   (avg_w -5, min_h - 50),

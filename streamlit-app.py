@@ -2,9 +2,7 @@ import streamlit as st
 import cv2
 import av
 import mediapipe as mp
-from only_hands import handTracker
-from only_hands import handTracker_nodraw
-from only_hands import keypoints_preprocessor
+from only_hands import handTracker, handTracker_nodraw, handTracker_nodraw_CNN,keypoints_preprocessor
 from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
 from tensorflow.keras import models
 
@@ -18,7 +16,7 @@ with st.sidebar:
     keypoints_checkbox = st.checkbox('Show keypoints', value=True)
     model_options = st.selectbox(
     'Select a model',
-    ('NN from keypoints',))
+    ('NN from keypoints','Hands Only Resnet 256'))
 
 #st.set_page_config(layout='wide')
 col1, col2, col3 = st.columns(3)
@@ -51,7 +49,7 @@ with tab1:
                     }]
                 }
             )
-        if keypoints_checkbox:
+        if keypoints_checkbox and model_options=='NN from keypoints':
             webrtc_ctx = webrtc_streamer(
                 key="WYH",
                 mode=WebRtcMode.SENDRECV,
@@ -59,7 +57,7 @@ with tab1:
                 media_stream_constraints={"video": True, "audio": False},
                 video_processor_factory=handTracker,
                 async_processing=True,)
-        else:
+        elif not keypoints_checkbox and model_options=='NN from keypoints':
             webrtc_ctx = webrtc_streamer(
                 key="WYH",
                 mode=WebRtcMode.SENDRECV,
@@ -67,6 +65,16 @@ with tab1:
                 media_stream_constraints={"video": True, "audio": False},
                 video_processor_factory=handTracker_nodraw,
                 async_processing=True,)
+
+        elif not keypoints_checkbox and model_options=='Hands Only Resnet 256':
+            webrtc_ctx = webrtc_streamer(
+                key="WYH",
+                mode=WebRtcMode.SENDRECV,
+                rtc_configuration=RTC_CONFIGURATION,
+                media_stream_constraints={"video": True, "audio": False},
+                video_processor_factory=handTracker_nodraw_CNN,
+                async_processing=True,)
+
     with col5:
         st.image('data/amer_sign2.png')
 with tab2:
