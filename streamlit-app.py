@@ -36,46 +36,40 @@ tab1, tab2 = st.tabs(['App', 'Reference'])
 
 with tab1:
 
-    col4, col5 = st.columns(2)
+    RTC_CONFIGURATION = RTCConfiguration(
+        {
+            "iceServers": [{
+                "urls": ["turn:openrelay.metered.ca:80"],
+                "username": "openrelayproject",
+                "credential": "openrelayproject",
+                }]
+            }
+        )
+    if keypoints_checkbox and model_options=='NN from keypoints':
+        webrtc_ctx = webrtc_streamer(
+            key="WYH",
+            mode=WebRtcMode.SENDRECV,
+            rtc_configuration=RTC_CONFIGURATION,
+            media_stream_constraints={"video": True, "audio": False},
+            video_processor_factory=handTracker,
+            async_processing=True,)
+    elif not keypoints_checkbox and model_options=='NN from keypoints':
+        webrtc_ctx = webrtc_streamer(
+            key="WYH",
+            mode=WebRtcMode.SENDRECV,
+            rtc_configuration=RTC_CONFIGURATION,
+            media_stream_constraints={"video": True, "audio": False},
+            video_processor_factory=handTracker_nodraw,
+            async_processing=True,)
 
-    with col4:
+    elif not keypoints_checkbox and model_options=='Hands Only Resnet 256':
+        webrtc_ctx = webrtc_streamer(
+            key="WYH",
+            mode=WebRtcMode.SENDRECV,
+            rtc_configuration=RTC_CONFIGURATION,
+            media_stream_constraints={"video": True, "audio": False},
+            video_processor_factory=handTracker_nodraw_CNN,
+            async_processing=True,)
 
-        RTC_CONFIGURATION = RTCConfiguration(
-            {
-                "iceServers": [{
-                    "urls": ["turn:openrelay.metered.ca:80"],
-                    "username": "openrelayproject",
-                    "credential": "openrelayproject",
-                    }]
-                }
-            )
-        if keypoints_checkbox and model_options=='NN from keypoints':
-            webrtc_ctx = webrtc_streamer(
-                key="WYH",
-                mode=WebRtcMode.SENDRECV,
-                rtc_configuration=RTC_CONFIGURATION,
-                media_stream_constraints={"video": True, "audio": False},
-                video_processor_factory=handTracker,
-                async_processing=True,)
-        elif not keypoints_checkbox and model_options=='NN from keypoints':
-            webrtc_ctx = webrtc_streamer(
-                key="WYH",
-                mode=WebRtcMode.SENDRECV,
-                rtc_configuration=RTC_CONFIGURATION,
-                media_stream_constraints={"video": True, "audio": False},
-                video_processor_factory=handTracker_nodraw,
-                async_processing=True,)
-
-        elif not keypoints_checkbox and model_options=='Hands Only Resnet 256':
-            webrtc_ctx = webrtc_streamer(
-                key="WYH",
-                mode=WebRtcMode.SENDRECV,
-                rtc_configuration=RTC_CONFIGURATION,
-                media_stream_constraints={"video": True, "audio": False},
-                video_processor_factory=handTracker_nodraw_CNN,
-                async_processing=True,)
-
-    with col5:
-        st.image('data/amer_sign2.png')
 with tab2:
      st.image('data/amer_sign2.png')
