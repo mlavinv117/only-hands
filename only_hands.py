@@ -7,7 +7,7 @@ from tensorflow.keras import models
 import numpy as np
 import streamlit as st
 
-@st.cache()
+@st.cache(allow_output_mutation=True)
 def load_model_from_cache(model_name):
     model = models.load_model('models/' + model_name)
     return model
@@ -55,6 +55,9 @@ class handTracker(VideoTransformerBase):
         self.hands = self.mpHands.Hands(self.mode, self.maxHands,self.modelComplex,
                                         self.detectionCon, self.trackCon)
         self.mpDraw = mp.solutions.drawing_utils
+        self.word = []
+        self.counter = 0
+        self.model = load_model_from_cache('NN_from_keypoints')
 
     def handsFinder(self,image,draw=True):
         imageRGB = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
@@ -86,14 +89,15 @@ class handTracker(VideoTransformerBase):
         keypoints = self.positionFinder(frame)
 
         if len(keypoints)==21:
+            self.counter+=1
             keypoints, avg_w, min_h = keypoints_preprocessor(keypoints)
             if min_h-25 <= 0:
                 min_h = 50
             if avg_w-25 <= 0:
                 avg_w = 50
-            model = load_model_from_cache('NN_from_keypoints')
-            prediction = model.predict(keypoints)
-            y_pred = prediction_postprocessor(prediction)
+            if self.counter % 5 == 0:
+                prediction = self.model.predict(keypoints)
+                y_pred = prediction_postprocessor(prediction)
             frame = cv2.rectangle(frame,
                                   (avg_w -5, min_h - 50),
                                   (avg_w + 25, min_h - 20),
