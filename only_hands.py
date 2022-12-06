@@ -107,6 +107,8 @@ class handTracker(VideoTransformerBase):
                                 color = (255, 0, 0),
                                 thickness = 2,)
 
+            frame = cv2.flip(frame, 1)
+
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
 
 class handTracker_nodraw(VideoTransformerBase):
@@ -171,6 +173,8 @@ class handTracker_nodraw(VideoTransformerBase):
                                 fontScale = 1,
                                 color = (255, 0, 0),
                                 thickness = 2,)
+
+            frame = cv2.flip(frame, 1)
 
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
 
@@ -255,6 +259,6 @@ class handTracker_nodraw_CNN(VideoTransformerBase):
                                 color = (255, 0, 0),
                                 thickness = 2,)
 
-            frame = cv2.flip(frame, 0)
+            frame = cv2.flip(frame, 1)
 
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
