@@ -98,20 +98,20 @@ class handTracker(VideoTransformerBase):
             if self.counter % 5 == 0:
                 prediction = self.model.predict(keypoints)
                 y_pred = prediction_postprocessor(prediction)
-            frame = cv2.rectangle(frame,
-                                  (avg_w -5, min_h - 50),
-                                  (avg_w + 25, min_h - 20),
-                                  (255, 255, 255),
-                                  -1)
-            frame = cv2.putText(frame,
-                                y_pred,
-                                org = (avg_w, min_h - 25),
-                                fontFace = cv2.FONT_HERSHEY_SIMPLEX,
-                                fontScale = 1,
-                                color = (255, 0, 0),
-                                thickness = 2,)
+        frame = cv2.rectangle(frame,
+                                (avg_w -5, min_h - 50),
+                                (avg_w + 25, min_h - 20),
+                                (255, 255, 255),
+                                -1)
+        frame = cv2.putText(frame,
+                            y_pred,
+                            org = (avg_w, min_h - 25),
+                            fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+                            fontScale = 1,
+                            color = (255, 0, 0),
+                            thickness = 2,)
 
-            frame = cv2.flip(frame, 1)
+        frame = cv2.flip(frame, 1)
 
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
 
