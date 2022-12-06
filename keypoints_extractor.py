@@ -39,24 +39,29 @@ class handTracker():
 
         return lmlist
 
-tracker = handTracker()
 
-mode = 'test'
-path = '/Users/manuel/Pictures/raw/' + mode + '/'
+def extract_keypoints(drive_path, mode):
 
-keypoints_list = []
-letters_list = []
-file_paths = []
-for f in os.listdir(path):
-    if os.path.isdir(path+f):
-        for pic in os.listdir(path+f):
-            pic_path = path+f+'/'+pic
-            picture = cv2.imread(pic_path)
-            keypoints = tracker.positionFinder(tracker.handsFinder(picture))
-            if len(keypoints) == 21:
-                keypoints_list.append(keypoints)
-                letters_list.append(f)
-                file_paths.append('/content/drive/MyDrive/Louder_Hands/data/own_data/' + mode + '/' + f + '/' + pic)
+    tracker = handTracker()
 
-keypoints_df = pd.DataFrame.from_dict({'path':file_paths, 'keypoints':keypoints_list, 'letters':letters_list})
-keypoints_df.to_csv('keypoints_' + mode + '_raw.csv', index=False)
+    #mode = 'test'
+    path = drive_path + mode + '/'
+    keypoints_list = []
+    letters_list = []
+    file_paths = []
+    for f in os.listdir(path):
+        if os.path.isdir(path+f):
+            for pic in os.listdir(path+f):
+                if '.png' in pic:
+                    pic_path = path+f+'/'+pic
+                    print(pic_path)
+                    picture = cv2.imread(pic_path)
+                    keypoints = tracker.positionFinder(tracker.handsFinder(picture))
+                    if len(keypoints) == 21:
+                        keypoints_list.append(keypoints)
+                        letters_list.append(f)
+                        file_paths.append(path + mode + '/' + f + '/' + pic)
+
+    raw_keypoints_df = pd.DataFrame.from_dict({'path':file_paths, 'keypoints':keypoints_list, 'letters':letters_list})
+
+    return raw_keypoints_df

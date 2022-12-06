@@ -43,20 +43,20 @@ class handTracker():
 
 def main():
 
-    letter = 24
-    samples = 25
+    letter = 18
+    samples = 100
     cap = cv2.VideoCapture(0)
     tracker = handTracker(letter, samples=samples)
 
-    path = '/Users/manuel/Pictures/'
+    path = '/Users/manuel/Pictures/new_pictures/'
     if not os.path.isdir(path+'draw/'):
         os.mkdir(path+'draw/')
     if not os.path.isdir(path+'raw/'):
         os.mkdir(path+'raw/')
-    
+
     if not os.path.isdir(path+'draw/'+str(letter)+'/'):
         os.mkdir(path+'draw/'+str(letter)+'/')
-    
+
     if not os.path.isdir(path+'raw/'+str(letter)+'/'):
         os.mkdir(path+'raw/'+str(letter)+'/')
     if not os.path.isfile(path+'letters.txt'):
@@ -94,7 +94,7 @@ def main():
             min_width = min_width-50
             max_width = max_width+50
             min_height = min_height-50
-            max_height = max_height+50         
+            max_height = max_height+50
             cropped_image = image[min_height:max_height, min_width:max_width]
             cv2.imwrite(path + 'draw/'+ str(tracker.letter) + '/'+str(i)+'.png', cropped_image)
             success,raw_image = cap.read()
@@ -109,7 +109,7 @@ def main():
             time.sleep(0.2)
 
         cv2.imshow("Video",image)
-        
+
         cv2.waitKey(1)
 
 if __name__ == "__main__":
