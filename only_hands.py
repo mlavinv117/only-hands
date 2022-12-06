@@ -255,6 +255,6 @@ class handTracker_nodraw_CNN(VideoTransformerBase):
                                 color = (255, 0, 0),
                                 thickness = 2,)
 
-            frame = cv2.flip(frame, 1)
+            frame = cv2.flip(frame, 0)
 
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
