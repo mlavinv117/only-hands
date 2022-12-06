@@ -96,7 +96,7 @@ class handTracker(VideoTransformerBase):
                 min_h = 50
             if avg_w-25 <= 0:
                 avg_w = 50
-            if self.counter % 5 == 0:
+            if self.counter % 30 == 0:
                 prediction = self.model.predict(keypoints)
                 self.y_pred = prediction_postprocessor(prediction)
             frame = cv2.rectangle(frame,
@@ -112,7 +112,7 @@ class handTracker(VideoTransformerBase):
                                 color = (255, 0, 0),
                                 thickness = 2,)
 
-        frame = cv2.flip(frame, 1)
+        #frame = cv2.flip(frame, 1)
 
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
 
