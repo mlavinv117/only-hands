@@ -58,6 +58,7 @@ class handTracker(VideoTransformerBase):
         self.word = []
         self.counter = 0
         self.model = load_model_from_cache('NN_from_keypoints')
+        self.y_pred = ''
 
     def handsFinder(self,image,draw=True):
         imageRGB = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
@@ -98,18 +99,18 @@ class handTracker(VideoTransformerBase):
             if self.counter % 5 == 0:
                 prediction = self.model.predict(keypoints)
                 y_pred = prediction_postprocessor(prediction)
-        frame = cv2.rectangle(frame,
-                                (avg_w -5, min_h - 50),
-                                (avg_w + 25, min_h - 20),
-                                (255, 255, 255),
-                                -1)
-        frame = cv2.putText(frame,
-                            y_pred,
-                            org = (avg_w, min_h - 25),
-                            fontFace = cv2.FONT_HERSHEY_SIMPLEX,
-                            fontScale = 1,
-                            color = (255, 0, 0),
-                            thickness = 2,)
+            frame = cv2.rectangle(frame,
+                                    (avg_w -5, min_h - 50),
+                                    (avg_w + 25, min_h - 20),
+                                    (255, 255, 255),
+                                    -1)
+            frame = cv2.putText(frame,
+                                y_pred,
+                                org = (avg_w, min_h - 25),
+                                fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+                                fontScale = 1,
+                                color = (255, 0, 0),
+                                thickness = 2,)
 
         frame = cv2.flip(frame, 1)
 
@@ -164,7 +165,7 @@ class handTracker_nodraw(VideoTransformerBase):
                 avg_w = 50
             model = load_model_from_cache('NN_from_keypoints')
             prediction = model.predict(keypoints)
-            y_pred = prediction_postprocessor(prediction)
+            self.y_pred = prediction_postprocessor(prediction)
             frame = cv2.rectangle(frame,
                                   (avg_w -5, min_h - 50),
                                   (avg_w + 25, min_h - 20),
