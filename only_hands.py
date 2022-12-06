@@ -98,7 +98,7 @@ class handTracker(VideoTransformerBase):
                 avg_w = 50
             if self.counter % 5 == 0:
                 prediction = self.model.predict(keypoints)
-                y_pred = prediction_postprocessor(prediction)
+                self.y_pred = prediction_postprocessor(prediction)
             frame = cv2.rectangle(frame,
                                     (avg_w -5, min_h - 50),
                                     (avg_w + 25, min_h - 20),
