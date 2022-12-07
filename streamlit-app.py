@@ -59,7 +59,7 @@ with tab1:
                 rtc_configuration=RTC_CONFIGURATION,
                 media_stream_constraints={"video": True, "audio": False},
                 video_processor_factory=only_hands.handTracker,
-                video_frame_callback=None,
+                video_frame_callback=only_hands.handTracker.recv,
                 async_processing=True,)
         elif not keypoints_checkbox and model_options=='NN from keypoints':
             webrtc_ctx = webrtc_streamer(
