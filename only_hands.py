@@ -263,7 +263,7 @@ class handTracker_concat(VideoTransformerBase):
         keypoints = self.positionFinder(frame)
         if len(keypoints)==21:
             self.counter+=1
-            keypoints, avg_w, min_h = keypoints_preprocessor(keypoints)
+            keypoints_df, avg_w, min_h = keypoints_preprocessor(keypoints)
             if min_h-25 <= 0:
                 min_h = 50
             if avg_w-25 <= 0:
@@ -273,7 +273,7 @@ class handTracker_concat(VideoTransformerBase):
                 min_width = 1000000
                 max_height = 0
                 min_height = 1000000
-                for point in keypoints:
+                for point in keypoints_df:
                     if point[1]>max_width:
                         max_width=point[1]
                     if point[1]<min_width:
