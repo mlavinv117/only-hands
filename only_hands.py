@@ -95,6 +95,9 @@ class handTracker(VideoTransformerBase):
 
         return lmlist
 
+    def callback(frame):
+        pass
+
     def recv(self, frame):
         #if 'word' not in st.session_state:
         # #    st.session_state['word'] = 'a'
