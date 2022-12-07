@@ -7,6 +7,9 @@ from tensorflow.keras import models
 import numpy as np
 import streamlit as st
 
+if 'word' not in st.session_state:
+    st.session_state['word'] = 'a'
+
 @st.cache(allow_output_mutation=True)
 def load_model_from_cache(model_name):
     model = models.load_model('models/' + model_name)
