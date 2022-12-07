@@ -288,7 +288,7 @@ class handTracker_concat(VideoTransformerBase):
                 max_height = max_height+50
                 cropped_image = frame[min_height:max_height, min_width:max_width]
                 resized_image = resize(cropped_image, [96,96])
-                prediction = self.model.predict(keypoints_df.values(), resized_image)
+                prediction = self.model.predict((keypoints_df.values(), resized_image))
                 self.new_y_pred = prediction_postprocessor(prediction)
                 if self.new_y_pred == self.y_pred:
                     self.same_letter_counter+=1
