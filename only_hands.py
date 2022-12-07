@@ -228,7 +228,7 @@ class handTracker_concat(VideoTransformerBase):
         self.word = []
         self.counter = 0
         self.same_letter_counter = 0
-        self.model = load_model_from_cache('Concatenated_keypoints_images')
+        self.model = load_model_from_cache('Concatenated__keypoints_images')
         self.y_pred = ''
 
     def handsFinder(self,image,draw=False):
