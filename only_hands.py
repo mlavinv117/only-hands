@@ -15,6 +15,9 @@ def load_model_from_cache(model_name):
     model = models.load_model('models/' + model_name)
     return model
 
+def write_to_frontend(text):
+    st.write(text)
+
 def keypoints_preprocessor(keypoints):
     data = {}
     hs = []
@@ -113,6 +116,7 @@ class handTracker(VideoTransformerBase):
                 if self.same_letter_counter == 3:
                     self.word.append(self.y_pred)
                     st.session_state['word'] = ''.join(self.word)
+                    write_to_frontend(''.join(self.word))
                     #st.write(''.join(self.word))
                     self.same_letter_counter = 0
             frame = cv2.rectangle(frame,
