@@ -6,6 +6,7 @@ from streamlit_webrtc import VideoTransformerBase, webrtc_streamer
 from tensorflow.keras import models
 import numpy as np
 import streamlit as st
+import threading
 
 if 'word' not in st.session_state:
     st.session_state['word'] = 'a'
