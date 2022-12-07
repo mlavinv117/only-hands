@@ -38,13 +38,21 @@ def keypoints_preprocessor(keypoints):
     data_df = pd.DataFrame.from_dict(data)
     return data_df, avg_w, min_h
 
-def prediction_postprocessor(prediction):
-    nums_to_letters = {
+def prediction_postprocessor(prediction, model_name):
+    if model_name=='NN_from_keypoints':
+        nums_to_letters = {
         0:'A',1:'B',2:'C',3:'D',4:'E',5:'F',6:'G',
         7:'H',8:'I',9:'J',10:'K',11:'L',12:'M',
         13:'N',14:'O',15:'P',16:'Q',17:'R',18:'S',
         19:'T',20:'U',21:'V',22:'W',23:'X',24:'Y',25:'Z',
     }
+    if model_name=='Concatenated__keypoints_images':
+        nums_to_letters = {
+        0:'A',1:'B',2:'C',3:'D',4:'E',5:'F',6:'G',
+        7:'H',8:'I',9:'K',10:'L',11:'M',12:'N',
+        13:'O',14:'P',15:'Q',16:'R',17:'S',18:'T',
+        19:'U',20:'V',21:'W',22:'X',23:'Y',
+        }
     max_pred = np.argmax(prediction, axis=1)[0]
     max_prob = np.max(prediction)
     print(max_prob)
@@ -114,7 +122,7 @@ class handTracker(VideoTransformerBase):
                 avg_w = 50
             if self.counter % 30 == 0:
                 prediction = self.model.predict(keypoints)
-                self.new_y_pred = prediction_postprocessor(prediction)
+                self.new_y_pred = prediction_postprocessor(prediction, 'NN_from_keypoints')
                 if self.new_y_pred == self.y_pred:
                     self.same_letter_counter+=1
                 else:
@@ -289,7 +297,7 @@ class handTracker_concat(VideoTransformerBase):
                 cropped_image = frame[min_height:max_height, min_width:max_width]
                 resized_image = resize(cropped_image, [96,96])
                 prediction = self.model.predict((np.expand_dims(keypoints_df, axis=0), np.expand_dims(resized_image, axis=0)))
-                self.new_y_pred = prediction_postprocessor(prediction)
+                self.new_y_pred = prediction_postprocessor(prediction, 'Concatenated__keypoints_images')
                 if self.new_y_pred == self.y_pred:
                     self.same_letter_counter+=1
                 else:
