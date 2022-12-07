@@ -79,13 +79,13 @@ with tab1:
                 video_processor_factory=only_hands.handTracker_concat,
                 async_processing=True,)
 
-    with col5:
-        while webrtc_ctx.state.playing:
-            with only_hands.lock:
-                word = only_hands.word_container["word"]
-            if word is None:
-                continue
-            st.write(word)
+    # with col5:
+    #     while webrtc_ctx.state.playing:
+    #         with only_hands.lock:
+    #             word = only_hands.word_container["word"]
+    #         if word is None:
+    #             continue
+    #         st.write(word)
 
 with tab2:
      st.image('data/amer_sign2.png')
