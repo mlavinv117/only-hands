@@ -100,8 +100,9 @@ class handTracker(VideoTransformerBase):
             if self.counter % 30 == 0:
                 prediction = self.model.predict(keypoints)
                 self.new_y_pred = prediction_postprocessor(prediction)
+                st.write(str(self.new_y_pred))
+                st.write(str(self.y_pred))
                 if self.new_y_pred == self.y_pred:
-                    st.write(str(self.same_letter_counter))
                     self.same_letter_counter+=1
                 else:
                     self.same_letter_counter = 0
