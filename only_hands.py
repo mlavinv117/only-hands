@@ -57,6 +57,7 @@ class handTracker(VideoTransformerBase):
         self.mpDraw = mp.solutions.drawing_utils
         self.word = []
         self.counter = 0
+        self.same_letter_counter = 0
         self.model = load_model_from_cache('NN_from_keypoints')
         self.y_pred = ''
 
@@ -98,7 +99,17 @@ class handTracker(VideoTransformerBase):
                 avg_w = 50
             if self.counter % 30 == 0:
                 prediction = self.model.predict(keypoints)
-                self.y_pred = prediction_postprocessor(prediction)
+                self.new_y_pred = prediction_postprocessor(prediction)
+                if self.new_y_pred == self.y_pred:
+                    self.same_letter_counter+=1
+                else:
+                    self.same_letter_counter = 0
+
+                self.y_pred = self.new_y_pred
+
+                if self.same_letter_counter == 3:
+                    self.word.append(self.y_pred)
+                    self.same_letter_counter = 0
             frame = cv2.rectangle(frame,
                                     (avg_w -5, min_h - 50),
                                     (avg_w + 25, min_h - 20),
