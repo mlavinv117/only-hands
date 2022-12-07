@@ -6,6 +6,9 @@ import only_hands
 from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
 from tensorflow.keras import models
 
+if 'word' not in st.session_state:
+    st.session_state['word'] = 'a'
+
 st.set_page_config(page_title="Only Hands",
                    page_icon="👌",
                    layout="wide",
