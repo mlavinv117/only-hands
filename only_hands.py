@@ -8,6 +8,9 @@ import numpy as np
 import streamlit as st
 import threading
 
+lock = threading.Lock()
+word_container = {"word": None}
+
 if 'word' not in st.session_state:
     st.session_state['word'] = 'a'
 
@@ -118,6 +121,8 @@ class handTracker(VideoTransformerBase):
 
                 if self.same_letter_counter == 3:
                     self.word.append(self.y_pred)
+                    with lock:
+                        word_container["word"] = ''.join(self.word)
                     #st.session_state['word'] = ''.join(self.word)
                     placeHolder.write(''.join(self.word))
                     self.same_letter_counter = 0

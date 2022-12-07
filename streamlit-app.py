@@ -79,7 +79,12 @@ with tab1:
                 async_processing=True,)
 
     with col5:
-        st.write(st.session_state['word'])
+        while webrtc_ctx.state.playing:
+            with lock:
+                word = word_container["img"]
+            if word is None:
+                continue
+            st.write(word)
 
 with tab2:
      st.image('data/amer_sign2.png')
