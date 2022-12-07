@@ -7,9 +7,9 @@ from tensorflow.keras import models
 import numpy as np
 import streamlit as st
 import threading
-
 lock = threading.Lock()
 word_container = {"word": None}
+from tensorflow.image import resize
 
 if 'word' not in st.session_state:
     st.session_state['word'] = 'a'
@@ -214,7 +214,7 @@ class handTracker_nodraw(VideoTransformerBase):
 
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
 
-class handTracker_nodraw_CNN(VideoTransformerBase):
+class handTracker_concat(VideoTransformerBase):
     def __init__(self, mode=False, maxHands=1, detectionCon=0.5,modelComplexity=1,trackCon=0.5):
         self.mode = mode
         self.maxHands = maxHands
@@ -225,6 +225,11 @@ class handTracker_nodraw_CNN(VideoTransformerBase):
         self.hands = self.mpHands.Hands(self.mode, self.maxHands,self.modelComplex,
                                         self.detectionCon, self.trackCon)
         self.mpDraw = mp.solutions.drawing_utils
+        self.word = []
+        self.counter = 0
+        self.same_letter_counter = 0
+        self.model = load_model_from_cache('Concatenated_keypoints_images')
+        self.y_pred = ''
 
     def handsFinder(self,image,draw=False):
         imageRGB = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
@@ -251,50 +256,68 @@ class handTracker_nodraw_CNN(VideoTransformerBase):
         return lmlist
 
     def recv(self, frame):
+        #if 'word' not in st.session_state:
+        # #    st.session_state['word'] = 'a'
         frame = frame.to_ndarray(format="bgr24")
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
-
         if len(keypoints)==21:
-            max_width = 0
-            min_width = 1000000
-            max_height = 0
-            min_height = 1000000
-            for point in keypoints:
-                if point[1]>max_width:
-                    max_width=point[1]
-                if point[1]<min_width:
-                    min_width=point[1]
-                if point[2]>max_height:
-                    max_height=point[2]
-                if point[2]<min_height:
-                    min_height=point[2]
-            min_width = min_width-50
-            max_width = max_width+50
-            min_height = min_height-50
-            max_height = max_height+50
-            cropped_image = frame[min_height:max_height, min_width:max_width]
+            self.counter+=1
             keypoints, avg_w, min_h = keypoints_preprocessor(keypoints)
             if min_h-25 <= 0:
                 min_h = 50
             if avg_w-25 <= 0:
                 avg_w = 50
-            model = load_model_from_cache('HO_Resnet_256')
-            prediction = model.predict(cropped_image)
-            y_pred = prediction_postprocessor(prediction)
+            if self.counter % 30 == 0:
+                max_width = 0
+                min_width = 1000000
+                max_height = 0
+                min_height = 1000000
+                for point in keypoints:
+                    if point[1]>max_width:
+                        max_width=point[1]
+                    if point[1]<min_width:
+                        min_width=point[1]
+                    if point[2]>max_height:
+                        max_height=point[2]
+                    if point[2]<min_height:
+                        min_height=point[2]
+                min_width = min_width-50
+                max_width = max_width+50
+                min_height = min_height-50
+                max_height = max_height+50
+                cropped_image = frame[min_height:max_height, min_width:max_width]
+                resized_image = resize(cropped_image, [96,96])
+                prediction = self.model.predict(keypoints, resized_image)
+                self.new_y_pred = prediction_postprocessor(prediction)
+                if self.new_y_pred == self.y_pred:
+                    self.same_letter_counter+=1
+                else:
+                    self.same_letter_counter = 0
+
+                self.y_pred = self.new_y_pred
+
+                if self.same_letter_counter == 3:
+                    self.word.append(self.y_pred)
+                    with lock:
+                        if len(self.word)>0:
+                            word_container["word"] = ''.join(self.word)
+                        else:
+                            word_container["word"] = ''
+                    self.same_letter_counter = 0
             frame = cv2.rectangle(frame,
-                                  (avg_w -5, min_h - 50),
-                                  (avg_w + 25, min_h - 20),
-                                  (255, 255, 255),
-                                  -1)
+                                    (avg_w -5, min_h - 50),
+                                    (avg_w + 25, min_h - 20),
+                                    (255, 255, 255),
+                                    -1)
             frame = cv2.putText(frame,
-                                y_pred,
+                                self.y_pred,
                                 org = (avg_w, min_h - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
                                 color = (255, 0, 0),
                                 thickness = 2,)
 
-            frame = cv2.flip(frame, 1)
+        #frame = cv2.flip(frame, 1)
 
         return av.VideoFrame.from_ndarray(frame, format="bgr24")

@@ -19,7 +19,7 @@ with st.sidebar:
     keypoints_checkbox = st.checkbox('Show keypoints', value=True)
     model_options = st.selectbox(
     'Select a model',
-    ('NN from keypoints','Hands Only Resnet 256'))
+    ('NN from keypoints','Concatenated model keypoints + images'))
 
 #st.set_page_config(layout='wide')
 col1, col2, col3 = st.columns(3)
@@ -70,13 +70,13 @@ with tab1:
                 video_processor_factory=only_hands.handTracker_nodraw,
                 async_processing=True,)
 
-        elif not keypoints_checkbox and model_options=='Hands Only Resnet 256':
+        elif not keypoints_checkbox and model_options=='Concatenated model keypoints + images':
             webrtc_ctx = webrtc_streamer(
                 key="WYH",
                 mode=WebRtcMode.SENDRECV,
                 rtc_configuration=RTC_CONFIGURATION,
                 media_stream_constraints={"video": True, "audio": False},
-                video_processor_factory=only_hands.handTracker_nodraw_CNN,
+                video_processor_factory=only_hands.handTracker_concat,
                 async_processing=True,)
 
     with col5:
