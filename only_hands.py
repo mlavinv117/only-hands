@@ -95,8 +95,9 @@ class handTracker(VideoTransformerBase):
 
         return lmlist
 
-    def callback(frame):
-        pass
+    def callback():
+        with lock:
+            return word_container["word"]
 
     def recv(self, frame):
         #if 'word' not in st.session_state:
