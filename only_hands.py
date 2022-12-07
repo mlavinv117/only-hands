@@ -95,7 +95,7 @@ class handTracker(VideoTransformerBase):
         frame = frame.to_ndarray(format="bgr24")
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
-
+        placeHolder = st.empty()
         if len(keypoints)==21:
             self.counter+=1
             keypoints, avg_w, min_h = keypoints_preprocessor(keypoints)
@@ -116,7 +116,7 @@ class handTracker(VideoTransformerBase):
                 if self.same_letter_counter == 3:
                     self.word.append(self.y_pred)
                     st.session_state['word'] = ''.join(self.word)
-                    write_to_frontend(''.join(self.word))
+                    placeHolder.write(st.session_state['word'])
                     #st.write(''.join(self.word))
                     self.same_letter_counter = 0
             frame = cv2.rectangle(frame,
