@@ -112,7 +112,7 @@ class handTracker(VideoTransformerBase):
                 min_h = 50
             if avg_w-25 <= 0:
                 avg_w = 50
-            if self.counter % 5 == 0:
+            if self.counter % 30 == 0:
                 prediction = self.model.predict(keypoints)
                 self.new_y_pred = prediction_postprocessor(prediction)
                 if self.new_y_pred == self.y_pred:
@@ -125,7 +125,10 @@ class handTracker(VideoTransformerBase):
                 if self.same_letter_counter == 3:
                     self.word.append(self.y_pred)
                     with lock:
-                        word_container["word"] = ''.join(self.word)
+                        if self.word is not None:
+                            word_container["word"] = ''.join(self.word)
+                        else:
+                            word_container["word"] = ''
                     self.same_letter_counter = 0
             frame = cv2.rectangle(frame,
                                     (avg_w -5, min_h - 50),
