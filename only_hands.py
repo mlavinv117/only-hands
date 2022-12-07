@@ -110,6 +110,7 @@ class handTracker(VideoTransformerBase):
                 if self.same_letter_counter == 3:
                     self.word.append(self.y_pred)
                     st.session_state.word = ''.join(self.word)
+                    st.write(st.session_state.word)
                     self.same_letter_counter = 0
             frame = cv2.rectangle(frame,
                                     (avg_w -5, min_h - 50),
