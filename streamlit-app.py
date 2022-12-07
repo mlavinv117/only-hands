@@ -80,8 +80,8 @@ with tab1:
 
     with col5:
         while webrtc_ctx.state.playing:
-            with lock:
-                word = word_container["img"]
+            with only_hands.lock:
+                word = only_hands.word_container["word"]
             if word is None:
                 continue
             st.write(word)
