@@ -92,6 +92,8 @@ class handTracker(VideoTransformerBase):
         return lmlist
 
     def recv(self, frame):
+        if 'word' not in st.session_state:
+            st.session_state['word'] = 'a'
         frame = frame.to_ndarray(format="bgr24")
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
