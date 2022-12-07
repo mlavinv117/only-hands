@@ -92,8 +92,8 @@ class handTracker(VideoTransformerBase):
         return lmlist
 
     def recv(self, frame):
-        if 'word' not in st.session_state:
-            st.session_state['word'] = 'a'
+        #if 'word' not in st.session_state:
+        # #    st.session_state['word'] = 'a'
         frame = frame.to_ndarray(format="bgr24")
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
@@ -117,9 +117,8 @@ class handTracker(VideoTransformerBase):
 
                 if self.same_letter_counter == 3:
                     self.word.append(self.y_pred)
-                    st.session_state['word'] = ''.join(self.word)
-                    placeHolder.write(st.session_state['word'])
-                    #st.write(''.join(self.word))
+                    #st.session_state['word'] = ''.join(self.word)
+                    placeHolder.write(''.join(self.word))
                     self.same_letter_counter = 0
             frame = cv2.rectangle(frame,
                                     (avg_w -5, min_h - 50),
