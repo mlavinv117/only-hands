@@ -7,9 +7,6 @@ from tensorflow.keras import models
 import numpy as np
 import streamlit as st
 
-if 'word' not in st.session_state:
-    st.session_state['word'] = ''
-
 @st.cache(allow_output_mutation=True)
 def load_model_from_cache(model_name):
     model = models.load_model('models/' + model_name)
@@ -104,6 +101,7 @@ class handTracker(VideoTransformerBase):
                 prediction = self.model.predict(keypoints)
                 self.new_y_pred = prediction_postprocessor(prediction)
                 if self.new_y_pred == self.y_pred:
+                    st.write(self.same_letter_counter)
                     self.same_letter_counter+=1
                 else:
                     self.same_letter_counter = 0
