@@ -97,7 +97,7 @@ class handTracker(VideoTransformerBase):
                 min_h = 50
             if avg_w-25 <= 0:
                 avg_w = 50
-            if self.counter % 30 == 0:
+            if self.counter % 5 == 0:
                 prediction = self.model.predict(keypoints)
                 self.new_y_pred = prediction_postprocessor(prediction)
                 st.write(str(self.new_y_pred))
