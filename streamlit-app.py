@@ -2,7 +2,7 @@ import streamlit as st
 import cv2
 import av
 import mediapipe as mp
-from only_hands import handTracker, handTracker_nodraw, handTracker_nodraw_CNN,keypoints_preprocessor
+import only_hands
 from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
 from tensorflow.keras import models
 
@@ -55,7 +55,7 @@ with tab1:
                 mode=WebRtcMode.SENDRECV,
                 rtc_configuration=RTC_CONFIGURATION,
                 media_stream_constraints={"video": True, "audio": False},
-                video_processor_factory=handTracker,
+                video_processor_factory=only_hands.handTracker,
                 async_processing=True,)
         elif not keypoints_checkbox and model_options=='NN from keypoints':
             webrtc_ctx = webrtc_streamer(
@@ -63,7 +63,7 @@ with tab1:
                 mode=WebRtcMode.SENDRECV,
                 rtc_configuration=RTC_CONFIGURATION,
                 media_stream_constraints={"video": True, "audio": False},
-                video_processor_factory=handTracker_nodraw,
+                video_processor_factory=only_hands.handTracker_nodraw,
                 async_processing=True,)
 
         elif not keypoints_checkbox and model_options=='Hands Only Resnet 256':
@@ -72,7 +72,7 @@ with tab1:
                 mode=WebRtcMode.SENDRECV,
                 rtc_configuration=RTC_CONFIGURATION,
                 media_stream_constraints={"video": True, "audio": False},
-                video_processor_factory=handTracker_nodraw_CNN,
+                video_processor_factory=only_hands.handTracker_nodraw_CNN,
                 async_processing=True,)
 
     with col5:
