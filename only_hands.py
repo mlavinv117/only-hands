@@ -100,8 +100,6 @@ class handTracker(VideoTransformerBase):
             if self.counter % 5 == 0:
                 prediction = self.model.predict(keypoints)
                 self.new_y_pred = prediction_postprocessor(prediction)
-                st.write(str(self.new_y_pred))
-                st.write(str(self.y_pred))
                 if self.new_y_pred == self.y_pred:
                     self.same_letter_counter+=1
                 else:
@@ -119,7 +117,7 @@ class handTracker(VideoTransformerBase):
                                     (255, 255, 255),
                                     -1)
             frame = cv2.putText(frame,
-                                self.y_pred,
+                                self.word,
                                 org = (avg_w, min_h - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
