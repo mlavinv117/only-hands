@@ -52,7 +52,7 @@ def prediction_postprocessor(prediction):
     if max_prob>=0.70:
         return y_pred
     if max_prob<0.70:
-        return None
+        return ""
 
 class handTracker(VideoTransformerBase):
     def __init__(self, mode=False, maxHands=1, detectionCon=0.5,modelComplexity=1,trackCon=0.5):
@@ -125,7 +125,7 @@ class handTracker(VideoTransformerBase):
                 if self.same_letter_counter == 3:
                     self.word.append(self.y_pred)
                     with lock:
-                        if self.word is not None:
+                        if len(self.word)>0:
                             word_container["word"] = ''.join(self.word)
                         else:
                             word_container["word"] = ''
