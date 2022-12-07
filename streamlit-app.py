@@ -76,8 +76,7 @@ with tab1:
                 async_processing=True,)
 
     with col5:
-        pass
-    #st.write(st.session_state.word)
+        st.write(st.session_state['word'])
 
 with tab2:
      st.image('data/amer_sign2.png')
