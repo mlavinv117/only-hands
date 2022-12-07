@@ -273,6 +273,7 @@ class handTracker_concat(VideoTransformerBase):
                 min_width = 1000000
                 max_height = 0
                 min_height = 1000000
+                print(keypoints_df)
                 for point in keypoints_df:
                     if point[1]>max_width:
                         max_width=point[1]
