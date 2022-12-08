@@ -30,7 +30,7 @@ with col1:
         f"""
         <style>
         p {
-        background-color: "##0014DC");
+        background-color: "#0014DC");
         }
         </style>
         """,
