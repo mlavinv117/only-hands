@@ -6,13 +6,7 @@ from streamlit_webrtc import VideoTransformerBase, webrtc_streamer
 from tensorflow.keras import models
 import numpy as np
 import streamlit as st
-import threading
-lock = threading.Lock()
-word_container = {"word": None}
 from tensorflow.image import resize
-
-if 'word' not in st.session_state:
-    st.session_state['word'] = 'a'
 
 @st.cache(allow_output_mutation=True)
 def load_model_from_cache(model_name):
@@ -104,10 +98,6 @@ class handTracker(VideoTransformerBase):
 
         return lmlist
 
-    def callback():
-        with lock:
-            return word_container["word"]
-
     def recv(self, frame):
         #if 'word' not in st.session_state:
         # #    st.session_state['word'] = 'a'
@@ -134,11 +124,6 @@ class handTracker(VideoTransformerBase):
 
                 if self.same_letter_counter == 3:
                     self.word.append(self.y_pred)
-                    with lock:
-                        if len(self.word)>0:
-                            word_container["word"] = ''.join(self.word)
-                        else:
-                            word_container["word"] = ''
                     self.same_letter_counter = 0
             frame = cv2.rectangle(frame,
                                     (avg_w -5, min_h - 50),
@@ -193,6 +178,12 @@ class handTracker_nodraw(VideoTransformerBase):
         self.hands = self.mpHands.Hands(self.mode, self.maxHands,self.modelComplex,
                                         self.detectionCon, self.trackCon)
         self.mpDraw = mp.solutions.drawing_utils
+        self.word = []
+        self.counter = 0
+        self.no_hand_counter = 0
+        self.same_letter_counter = 0
+        self.model = load_model_from_cache('NN_from_keypoints')
+        self.y_pred = ''
 
     def handsFinder(self,image,draw=False):
         imageRGB = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
@@ -219,33 +210,44 @@ class handTracker_nodraw(VideoTransformerBase):
         return lmlist
 
     def recv(self, frame):
+        #if 'word' not in st.session_state:
+        # #    st.session_state['word'] = 'a'
         frame = frame.to_ndarray(format="bgr24")
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
-
+        self.counter+=1
+        print(keypoints)
         if len(keypoints)==21:
             keypoints, avg_w, min_h = keypoints_preprocessor(keypoints)
             if min_h-25 <= 0:
                 min_h = 50
             if avg_w-25 <= 0:
                 avg_w = 50
-            model = load_model_from_cache('NN_from_keypoints')
-            prediction = model.predict(keypoints)
-            self.y_pred = prediction_postprocessor(prediction)
+            if self.counter % 15 == 0:
+                prediction = self.model.predict(keypoints)
+                self.new_y_pred = prediction_postprocessor(prediction, 'NN_from_keypoints')
+                if self.new_y_pred == self.y_pred:
+                    self.same_letter_counter+=1
+                else:
+                    self.same_letter_counter = 0
+
+                self.y_pred = self.new_y_pred
+
+                if self.same_letter_counter == 3:
+                    self.word.append(self.y_pred)
+                    self.same_letter_counter = 0
             frame = cv2.rectangle(frame,
-                                  (avg_w -5, min_h - 50),
-                                  (avg_w + 25, min_h - 20),
-                                  (255, 255, 255),
-                                  -1)
+                                    (avg_w -5, min_h - 50),
+                                    (avg_w + 25, min_h - 20),
+                                    (255, 255, 255),
+                                    -1)
             frame = cv2.putText(frame,
-                                y_pred,
+                                self.y_pred,
                                 org = (avg_w, min_h - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
                                 color = (255, 0, 0),
                                 thickness = 2,)
-
-
 
             width  = frame.shape[1]   # float `width`
             height = frame.shape[0]
@@ -264,7 +266,15 @@ class handTracker_nodraw(VideoTransformerBase):
                                 color = (255, 0, 0),
                                 thickness = 2,)
 
-            #frame = cv2.flip(frame, 1)
+        else:
+            if self.counter % 20 == 0:
+                self.no_hand_counter+=1
+                if self.no_hand_counter==3:
+                    print('ok')
+                    self.word = []
+                    self.no_hand_counter=0
+
+        #frame = cv2.flip(frame, 1)
 
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
 
@@ -342,6 +352,7 @@ class handTracker_image_only(VideoTransformerBase):
                 min_height = min_height-50
                 max_height = max_height+50
                 cropped_image = frame[min_height:max_height, min_width:max_width]
+                cropped_image = av.VideoFrame.from_ndarray(frame, format="bgr24")
                 prediction = self.model.predict(np.expand_dims(cropped_image, axis=0))
                 self.new_y_pred = prediction_postprocessor(prediction, 'Hands_Only_Resnet50')
                 if self.new_y_pred == self.y_pred:
@@ -353,11 +364,6 @@ class handTracker_image_only(VideoTransformerBase):
 
                 if self.same_letter_counter == 3:
                     self.word.append(self.y_pred)
-                    with lock:
-                        if len(self.word)>0:
-                            word_container["word"] = ''.join(self.word)
-                        else:
-                            word_container["word"] = ''
                     self.same_letter_counter = 0
             frame = cv2.rectangle(frame,
                                     (avg_w -5, min_h - 50),
@@ -493,11 +499,6 @@ class handTracker_concat(VideoTransformerBase):
 
                 if self.same_letter_counter == 3:
                     self.word.append(self.y_pred)
-                    with lock:
-                        if len(self.word)>0:
-                            word_container["word"] = ''.join(self.word)
-                        else:
-                            word_container["word"] = ''
                     self.same_letter_counter = 0
             frame = cv2.rectangle(frame,
                                     (avg_w -5, min_h - 50),
