@@ -208,7 +208,7 @@ with tab2:
 
                """)
 
-    with st.container('Check the process!'):
+    with st.expander('Check the process!'):
         tab8, tab9, tab10 = st.tabs(['The input image', 'The output of a cropped image of a hand', 'The output of the keypoints'])
 
         with tab8:
