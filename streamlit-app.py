@@ -161,3 +161,92 @@ with tab2:
             and several other elements that assist on adding complexity. The full stack of these components is known as Neural Network (NN). When a model uses
             one or several NN to perform its task, it is said that this ML model is a Deep Learning model.
                 """)
+
+    with tab6:
+
+        st.info("""
+            A NN is a composed by several layers of processing elements. A layer can be composed of one or more 'neuron', which is a
+            concatenation of a single linear regression followed by an activation function. This algorithm received the name of 'neuron' since it
+            tries to emulate the biological neurons of the brain: they perform a calculation and signal the output to the other neurons of the brain
+            (process known as 'synapsis').
+                """)
+
+    with tab7:
+
+        st.info("""
+            CNNs are a more advanced version of regular NNs, since they can process multi-dimensional arrays, for example images. A CNN model can receive images
+            as input and can perform complex tasks like identyfing certain element on it (for example, detect a hand!) and they can also perform
+            classification tasks (for example, given a hand sign, classify to which letter of the sign lenguage it corresponds to!).
+                """)
+
+    st.header('The approach(es)')
+
+    st.caption("""
+               The task we had in hand was, given a picture of a hand sign, determine to which letter of the alphabet it corresponds to. With this in mind,
+               and having into consideration the previous concepts, we decided to try 3 approaches:
+               1. Build a NN that uses keypoints of a hand to classify the sign into a letter.
+               2. Build a CNN that uses a picture of hand to classify the sign into a letter.
+               3. Concatenate both the NN from point 1 and the CNN from point 2 into a non-sequential DL model.
+               """)
+    st.subheader('Wait... keypoints?')
+
+    st.caption("""
+               Introducing Mediapipe!\n
+
+               Mediapipe is a powerful library in Python, developed by Google, which is already a DL model that is useful to detect several objects from
+               pictures... including HANDS! A mantra in ML is: if somebody has already done it, build on top of it instead of starting from scratch.
+               Python, being an Open Source programming language, has a great spirit of sharing and the largest programmers community worlwide!\n
+
+               We decided to use mediapipe library to smash the first part of our problem: given a picture, determine if we have a hand on it and extract it.
+               The second part of the problem, given a picture of a hand, determine if it corresponds to a letter of the alphabet in sign language, is what we
+               will specifically train our own model to solve. \n
+
+                So, with mediapipe we created a function that gets a picture, and deliver two outputs: the cropped picture of only the hand and
+                20 keypoints of the hand, this is, a representation in coordinates (no longer pixels!) of how the palm and fingers are located with a picture from each other.
+                The keypoints allow us to transform an image problem (CNN) into a numerical features problem (NN).
+
+
+               """)
+
+    st.subheader('Our mediapipe implementation')
+
+    mediapipe_code = """
+    class handTracker():
+    def __init__(self, letter, *, mode=False, maxHands=2, detectionCon=0.5,modelComplexity=1,trackCon=0.5, samples=100):
+        self.mode = mode
+        self.maxHands = maxHands
+        self.detectionCon = detectionCon
+        self.modelComplex = modelComplexity
+        self.trackCon = trackCon
+        self.mpHands = mp.solutions.hands
+        self.hands = self.mpHands.Hands(self.mode, self.maxHands,self.modelComplex,
+                                        self.detectionCon, self.trackCon)
+        self.mpDraw = mp.solutions.drawing_utils
+        self.letter = letter
+        self.samples = samples
+
+    def handsFinder(self,image,draw=True):
+        imageRGB = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+        self.results = self.hands.process(imageRGB)
+
+        if self.results.multi_hand_landmarks:
+            for handLms in self.results.multi_hand_landmarks:
+
+                if draw:
+                    self.mpDraw.draw_landmarks(image, handLms, self.mpHands.HAND_CONNECTIONS)
+        return image
+
+    def positionFinder(self,image, handNo=0, draw=True):
+        lmlist = []
+        if self.results.multi_hand_landmarks:
+            Hand = self.results.multi_hand_landmarks[handNo]
+            for id, lm in enumerate(Hand.landmark):
+                h,w,c = image.shape
+                cx,cy = int(lm.x*w), int(lm.y*h)
+                lmlist.append([id,cx,cy])
+            if draw:
+                cv2.circle(image,(cx,cy), 5 , (255,0,255), cv2.FILLED)
+
+        return lmlist
+    """
+    st.code(mediapipe_code, language='python')
