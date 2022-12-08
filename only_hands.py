@@ -33,14 +33,14 @@ def keypoints_preprocessor(keypoints):
     return data_df, avg_w, min_h
 
 def prediction_postprocessor(prediction, model_name):
-    if (model_name=='NN_from_keypoints') or (model_name=='Hands_Only_Resnet50'):
+    if (model_name=='NN_from_keypoints'):
         nums_to_letters = {
         0:'A',1:'B',2:'C',3:'D',4:'E',5:'F',6:'G',
         7:'H',8:'I',9:'J',10:'K',11:'L',12:'M',
         13:'N',14:'O',15:'P',16:'Q',17:'R',18:'S',
         19:'T',20:'U',21:'V',22:'W',23:'X',24:'Y',25:'Z',
     }
-    if model_name=='Concatenated__keypoints_images':
+    if model_name=='Concatenated__keypoints_images' or (model_name=='Hands_Only_Resnet50'):
         nums_to_letters = {
         0:'A',1:'B',2:'C',3:'D',4:'E',5:'F',6:'G',
         7:'H',8:'I',9:'K',10:'L',11:'M',12:'N',
@@ -451,7 +451,7 @@ class handTracker_concat(VideoTransformerBase):
     def recv(self, frame):
         #if 'word' not in st.session_state:
         # #    st.session_state['word'] = 'a'
-        frame = frame.to_ndarray(format="bgr24")
+        frame = frame.to_ndarray(format="rgb24")
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
         self.counter+=1
@@ -489,7 +489,7 @@ class handTracker_concat(VideoTransformerBase):
                     max_height = frame.shape[0]
                 cropped_image = frame[min_height:max_height, min_width:max_width]
                 resized_image = resize(cropped_image, [96,96])
-                resized_image = av.VideoFrame.from_ndarray(frame, format="bgr24")
+                #resized_image = av.VideoFrame.from_ndarray(frame, format="bgr24")
                 prediction = self.model.predict((keypoints_df, np.expand_dims(resized_image, axis=0)))
                 self.new_y_pred = prediction_postprocessor(prediction, 'Concatenated__keypoints_images')
                 if self.new_y_pred == self.y_pred:
@@ -541,4 +541,4 @@ class handTracker_concat(VideoTransformerBase):
 
         #frame = cv2.flip(frame, 1)
 
-        return av.VideoFrame.from_ndarray(frame, format="bgr24")
+        return av.VideoFrame.from_ndarray(frame, format="rgb24")

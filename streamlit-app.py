@@ -114,3 +114,14 @@ with tab2:
                """)
 
     st.info("**FACT**: Around 70 million people are deaf globally")
+
+    st.header('The challange')
+
+    st.caption("""
+               Creating a Machine Learning model that detects the signs for the 26 different letters of the alphabet is
+               such a challenging task, that the Sign Language MNIST dataset is today a popular benchmark for image-based
+               machine learning methods.
+
+                The American Sign Language letter database of hand gestures represent a multi-class problem with 24 classes
+                of letters (excluding J and Z which require motion).
+               """)
