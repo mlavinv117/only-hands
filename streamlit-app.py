@@ -113,7 +113,7 @@ with tab2:
                to learn to spell letters in sign language.
                """)
 
-    st.info("**FACT**: Around 70 million people are deaf globally")
+    st.warning("**FACT**: Around 70 million people are deaf globally")
 
     st.header('The challange')
 
@@ -133,3 +133,16 @@ with tab2:
                 that don't require movement? Can it generalize well to real life images of hands? This was our first step in the long
                 road of creating a useful app to learn!
                """)
+
+    st.header('Some concepts')
+
+    tab3, tab4, tab5, tab6, tab7 = st.tabs(['Machine Learning', 'Supervised Learning', 'Deep Learning', 'Neural Network (NN)', 'Convolutional Neural Network (CNN)'])
+
+    with tab3:
+
+        st.subheader('Machine Learning')
+
+        st.info("""
+            The use and development of computer systems that are able to learn and adapt without following explicit instructions,
+                by using algorithms and statistical models to analyse and draw inferences from patterns in data.
+                """)
