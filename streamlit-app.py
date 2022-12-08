@@ -99,3 +99,16 @@ with tab1:
     with col5:
         st.write('Try to make the signs to create your favorite word!')
         st.image('data/amer_sign2.png')
+
+with tab2:
+
+    st.title('Unsounded by slb')
+
+    st.header('Where it all started...')
+
+    st.caption("""
+               Have you ever seen the movie "The sound of metal" by Darius Marder? In one sentence, it is about
+               a heavy-metal drummer's life is thrown into freefall when he begins to lose his hearing. The
+               struggle of a person losing so important motivated us to develop Unsounded, an app that can teach you
+               to learn to spell letters in sign language')
+               """)
