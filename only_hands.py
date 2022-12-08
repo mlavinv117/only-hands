@@ -115,6 +115,7 @@ class handTracker(VideoTransformerBase):
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
         self.counter+=1
+        print(keypoints)
         if len(keypoints)==21:
             keypoints, avg_w, min_h = keypoints_preprocessor(keypoints)
             if min_h-25 <= 0:
