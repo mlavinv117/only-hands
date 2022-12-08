@@ -272,17 +272,17 @@ with tab2:
         return image
 
     def positionFinder(self,image, handNo=0, draw=True):
-        lmlist = []
+        keypoints = []
         if self.results.multi_hand_landmarks:
             Hand = self.results.multi_hand_landmarks[handNo]
             for id, lm in enumerate(Hand.landmark):
                 h,w,c = image.shape
                 cx,cy = int(lm.x*w), int(lm.y*h)
-                lmlist.append([id,cx,cy])
+                keypoints.append([id,cx,cy])
             if draw:
                 cv2.circle(image,(cx,cy), 5 , (255,0,255), cv2.FILLED)
 
-        return lmlist
+        return keypoints
     """
     st.code(mediapipe_code, language='python')
 
@@ -293,3 +293,42 @@ with tab2:
                return a list of the keypoint found and the height, width coordinates for each of them.
 
                """)
+
+    st.subheader('The benchmark to beat')
+
+    st.caption("""
+               Whenever we deal with a ML model, we have to stablish a benchmark to which we will compare if our model is performing better or worse. This will give us
+               the feedback if all the effort we took into building a model was actually worth, i.e., if we are performing better than the benchmark model, and also
+               measure how much better. There are 2 typical benchmark dummy models, depending on the task to perform:\n
+               1. The mean of the population if we have a regression task (the average price of a house within our population if we want to predict a price).\n
+               2. The most frequent class if we have a classification task (the most frequently used letter in the alphabet).\n
+               The most frequent letter in the English language is "E", according to this article (http://norvig.com/mayzner.html).
+
+               """)
+
+    st.header('Taking ownership of the data')
+
+    st.caption("""
+               The Sign Language MNIST dataset, as mention before, is a collection of more than 32,000 pictures of all the letters in the sign language, but
+               unfortunatelly, each of the pictures has a 28x28 pixels size and a single color channel (gray scale). While it is possible to build a powerful
+               model that performs excellent in the test data from this set, it is difficult to believe it can generalize well with real life color pictures of hands,
+               taken with modern webcams or cellphones.\n
+               That is why we decided to take the training data of our own. We modified the class above and implemented a code that allow us to take n number of pictures
+               for a specified letter, save each of them in a specific folder (so each class is properly separated and labelled), and extract the two main features:
+               cropped pictures of the hand performing the sign for the letter, and the corresponding list of keypoints/coordinates. \n
+               We generated a dataset of nearly 10,000 images, having at least 300 pictures of each sign to train and 100 pictures to test our models.
+
+               """)
+
+    with st.expander("Check the example:"):
+
+        st.image('data/own_dataset_example.PNG')
+
+    st.header('The NN model (only the keypoints!)')
+
+    st.caption("""
+               The first approach was to start "simple".
+
+               """)
+
+    st.warning("Notice the quotes on the word 'simple' on the paragrah above. This was actually not the simplest posible approach. We already had a feeling that")
