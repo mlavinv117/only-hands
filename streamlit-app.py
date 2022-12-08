@@ -221,14 +221,14 @@ with tab2:
 
         with tab10:
 
-            col6, col7 = st.columns(2)
+            col6, col7, col8, col9 = st.columns([1,2,2,1])
 
-            with col6:
+            with col7:
 
                 st.write('Keypoints over the picture:')
                 st.image('data/cropped_hand_with_keypoints.png')
 
-            with col7:
+            with col8:
 
                 st.write('Their numerical representation:')
                 st.write(
