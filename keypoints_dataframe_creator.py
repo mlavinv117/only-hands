@@ -1,10 +1,10 @@
 import pandas as pd
 
-def create_keypoints_dataframe(raw_keypoints_df, mode):
+def create_keypoints_dataframe(input_keypoints_df):
 
     #mode = 'test'
     #raw_keypoints_df = pd.read_csv('keypoints_' + mode + '_raw.csv')
-
+    raw_keypoints_df = input_keypoints_df.copy()
     raw_keypoints_df['keypoints'] = raw_keypoints_df.keypoints.apply(lambda x:  str(x).strip('[').strip(']').replace('[','').split('],'))
     raw_keypoints_df['len'] = raw_keypoints_df.keypoints.apply(lambda x: len(x))
     letters_df = raw_keypoints_df[raw_keypoints_df['len']==21]
