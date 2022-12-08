@@ -9,8 +9,8 @@ from tensorflow.keras import models
 if 'word' not in st.session_state:
     st.session_state['word'] = 'a'
 
-st.set_page_config(page_title="Only Hands",
-                   page_icon="👌",
+st.set_page_config(page_title="UNS🤏UNDED",
+                   page_icon="👂",
                    layout="wide",
                    initial_sidebar_state="auto",
                    menu_items=None)
@@ -29,7 +29,7 @@ with col1:
     st.write(' ')
 
 with col2:
-    st.image('data/only_hands_logo.png')
+    st.image('data/unsounded.png')
 
 with col3:
     st.write(' ')
