@@ -6,17 +6,17 @@ import only_hands
 from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
 from tensorflow.keras import models
 
-def local_css(file_name):
-    with open(file_name) as f:
-        st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
-
-local_css("style.css")
-
 st.set_page_config(page_title="UNS🤏UNDED",
                    page_icon="👂",
                    layout="wide",
                    initial_sidebar_state="auto",
                    menu_items=None)
+
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
+
+local_css("style.css")
 
 with st.sidebar:
     keypoints_checkbox = st.checkbox('Show keypoints', value=True)
