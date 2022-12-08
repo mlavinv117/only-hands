@@ -128,4 +128,8 @@ with tab2:
                 The training data (27,455 cases) and test data (7172 cases) are approximately half the size of the standard MNIST
                 but otherwise similar with a header row of label, pixel1,pixel2….pixel784 which represent a single 28x28 pixel image
                 with grayscale values between 0-255.
+
+                Can we build a Machine Learning model that uses the MNIST dataset to train to detect the 24 letters of the sign language
+                that don't require movement? Can it generalize well to real life images of hands? This was our first step in the long
+                road of creating a useful app to learn!
                """)
