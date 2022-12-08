@@ -502,10 +502,11 @@ class handTracker_concat(VideoTransformerBase):
                                     (width, height),
                                     (255, 255, 255),
                                     -1)
-
+            len_word = len(self.word)
+            word_center = int(round(width/2,0))-len_word*15
             frame = cv2.putText(frame,
                                 ''.join(self.word),
-                                org = (int(round(width/2,0)), height - 25),
+                                org = (word_center, height - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
                                 color = (255, 0, 0),
