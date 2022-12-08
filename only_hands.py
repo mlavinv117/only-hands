@@ -396,6 +396,7 @@ class handTracker_concat(VideoTransformerBase):
         self.word = []
         self.counter = 0
         self.same_letter_counter = 0
+        self.no_hand_counter = 0
         self.model = load_model_from_cache('Concatenated__keypoints_images')
         self.y_pred = ''
 
@@ -429,8 +430,8 @@ class handTracker_concat(VideoTransformerBase):
         frame = frame.to_ndarray(format="bgr24")
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
+        self.counter+=1
         if len(keypoints)==21:
-            self.counter+=1
             keypoints_df, avg_w, min_h = keypoints_preprocessor(keypoints)
             if min_h-25 <= 0:
                 min_h = 50
@@ -503,7 +504,7 @@ class handTracker_concat(VideoTransformerBase):
                                     (255, 255, 255),
                                     -1)
             len_word = len(self.word)
-            word_center = int(round(width/2,0))-len_word*15
+            word_center = int(round(width/2,0))+15-len_word*15
             frame = cv2.putText(frame,
                                 ''.join(self.word),
                                 org = (word_center, height - 25),
@@ -511,6 +512,12 @@ class handTracker_concat(VideoTransformerBase):
                                 fontScale = 1,
                                 color = (255, 0, 0),
                                 thickness = 2,)
+        else:
+            if self.counter % 30 == 0:
+                self.no_hand_counter+=1
+                if self.no_hand_counter==4:
+                    self.word = []
+                    self.no_hand_counter+=0
 
         #frame = cv2.flip(frame, 1)
 
