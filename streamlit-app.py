@@ -6,6 +6,7 @@ import only_hands
 from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
 from tensorflow.keras import models
 import platform
+import pandas as pd
 
 st.set_page_config(page_title="UNS🤏UNDED",
                    page_icon="👂",
@@ -326,9 +327,17 @@ with tab2:
 
     st.header('The NN model (only the keypoints!)')
 
+    st.subheader('Data preparation')
+
     st.caption("""
-               The first approach was to start "simple".
+               The first approach was to start "simple". Through a modifyed implementation of our main class handTracker, wrapped in a function, we first created a Pandas DataFrame
+               from the keypoints. Each row of this DataFrame represents the extracted keypoints of each of the 10,000 pictures. The DataFrame has 43 columns: 42 columns that represent the
+               X and Y coordinate of the 21 keypoints, and the label of the corresponding letter of the alphabet that is being represented in the hand picture.
 
                """)
+
+    df_example = pd.read_csv('data/keypoints_dataframe_example.csv')
+
+    st.dataframe(data=df_example)
 
     st.warning("Notice the quotes on the word 'simple' on the paragrah above. This was actually not the simplest posible approach. We already had a feeling that")
