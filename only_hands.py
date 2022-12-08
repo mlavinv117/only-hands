@@ -329,7 +329,7 @@ class handTracker_image_only(VideoTransformerBase):
 
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
 
-    class handTracker_concat(VideoTransformerBase):
+class handTracker_concat(VideoTransformerBase):
     def __init__(self, mode=False, maxHands=1, detectionCon=0.5,modelComplexity=1,trackCon=0.5):
         self.mode = mode
         self.maxHands = maxHands
