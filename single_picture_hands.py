@@ -72,3 +72,4 @@ if len(lmList) != 0:
     raw_image = tracker.handsFinder(raw_image, draw=False)
     raw_cropped_image = raw_image[min_height:max_height, min_width:max_width]
     cv2.imwrite('/home/lvizcaino/code/ManuelLavinSLB/only-hands/data/cropped_hand_without_keypoints.png', raw_cropped_image)
+    print(lmList)

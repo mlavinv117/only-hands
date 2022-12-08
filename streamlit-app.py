@@ -221,7 +221,25 @@ with tab2:
 
         with tab10:
 
-            st.image('data/cropped_hand_with_keypoints.png')
+            col6, col7 = st.columns(2)
+
+            with col6:
+
+                st.write('Keypoints over the picture:')
+                st.image('data/cropped_hand_with_keypoints.png')
+
+            with col7:
+
+                st.write('Their numerical representation:')
+                st.write(
+                         """
+                         [[0, 196, 316], [1, 242, 308], [2, 282, 282], [3, 309, 255], [4, 332, 234], [5, 257, 210], [6, 271, 168], [7, 278, 141], [8, 283, 117],
+                         [9, 235, 199], [10, 251, 149], [11, 262, 119], [12, 269, 92], [13, 210, 198], [14, 212, 147], [15, 214, 116], [16, 216, 89], [17, 185, 206],
+                         [18, 187, 164], [19, 188, 139], [20, 191, 114]]
+                         """
+                         )
+
+
 
         with tab11:
 
