@@ -207,7 +207,7 @@ with tab2:
 
 
                """)
-    tab8, tab9, tab10 = st.tabs['The input image', 'The output of a cropped image of a hand', 'The output of the keypoints']
+    tab8, tab9, tab10 = st.tabs(['The input image', 'The output of a cropped image of a hand', 'The output of the keypoints'])
 
     with tab8:
 
