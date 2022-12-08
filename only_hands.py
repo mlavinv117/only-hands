@@ -75,6 +75,7 @@ class handTracker(VideoTransformerBase):
         self.mpDraw = mp.solutions.drawing_utils
         self.word = []
         self.counter = 0
+        self.no_hand_counter = 0
         self.same_letter_counter = 0
         self.model = load_model_from_cache('NN_from_keypoints')
         self.y_pred = ''
@@ -115,7 +116,6 @@ class handTracker(VideoTransformerBase):
         keypoints = self.positionFinder(frame)
         self.counter+=1
         if len(keypoints)==21:
-
             keypoints, avg_w, min_h = keypoints_preprocessor(keypoints)
             if min_h-25 <= 0:
                 min_h = 50
