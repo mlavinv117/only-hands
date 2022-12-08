@@ -113,7 +113,7 @@ with tab2:
                to learn to spell letters in sign language.
                """)
 
-    st.warning("**FACT**: Around 70 million people are deaf globally")
+    st.warning("**FACT**: Around 70 million people are deaf globally.")
 
     st.header('The challange')
 
@@ -136,13 +136,28 @@ with tab2:
 
     st.header('Some concepts')
 
-    tab3, tab4, tab5, tab6, tab7 = st.tabs(['Machine Learning', 'Supervised Learning', 'Deep Learning', 'Neural Network (NN)', 'Convolutional Neural Network (CNN)'])
+    tab3, tab4, tab5, tab6, tab7 = st.tabs(['Machine Learning (ML)', 'Supervised Learning', 'Deep Learning (DL)', 'Neural Network (NN)', 'Convolutional Neural Network (CNN)'])
 
     with tab3:
-
-        st.subheader('Machine Learning')
 
         st.info("""
             The use and development of computer systems that are able to learn and adapt without following explicit instructions,
                 by using algorithms and statistical models to analyse and draw inferences from patterns in data.
+                """)
+
+    with tab4:
+
+        st.info("""
+            A type of ML algoriths that learn from examples of data that are already classified or of which output is known. For example: \n
+            -Phots of cat and dogs, that in the name of the picture we specify the class (dog01.png, dog02.png, etc.)
+            -The different features of a house that has an impact in its price (#bedrooms, #bathrooms, zone, etc.) and its actual price.
+                """)
+
+    with tab5:
+
+        st.info("""
+            Refers to a specific type of ML models, which are more robust, require more computational power, and can perform even more difficult tasks
+            than conventional ML models. They use advanced algorithms that consist of a concatenation of several linear regressions, activation functions,
+            and several other elements that assist on adding complexity. The full stack of these components is known as Neural Network (NN). When a model uses
+            one or several NN to perform its task, it is said that this ML model is a Deep Learning model.
                 """)
