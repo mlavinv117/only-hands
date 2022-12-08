@@ -208,8 +208,8 @@ with tab2:
 
                """)
 
-    with st.expander('Check the process!'):
-        tab8, tab9, tab10 = st.tabs(['The input image', 'The output of a cropped image of a hand', 'The output of the keypoints'])
+    with st.expander('Check mediapipe in action!'):
+        tab8, tab9, tab10, tab11 = st.tabs(['The input image', 'The output of a cropped image of a hand', 'The output of the keypoints', 'Keypoints reference'])
 
         with tab8:
 
@@ -222,6 +222,10 @@ with tab2:
         with tab10:
 
             st.image('data/cropped_hand_with_keypoints.png')
+
+        with tab11:
+
+            st.image('data/keypoints_reference.png')
 
         st.subheader('Our mediapipe implementation')
 
