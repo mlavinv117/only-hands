@@ -20,7 +20,7 @@ with st.sidebar:
     ('NN from keypoints','Resnet50 from images','Concatenated model keypoints + images'))
 
 #st.set_page_config(layout='wide')
-col1, col2, col3 = st.columns(3)
+col1, col2, col3 = st.columns([1,3,1])
 
 #Header with 3 columns to center image
 with col1:
