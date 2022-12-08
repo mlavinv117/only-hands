@@ -323,7 +323,7 @@ class handTracker_image_only(VideoTransformerBase):
     def recv(self, frame):
         #if 'word' not in st.session_state:
         # #    st.session_state['word'] = 'a'
-        frame = frame.to_ndarray(format="bgr24")
+        frame = frame.to_ndarray(format="rgb24")
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
         self.counter+=1
@@ -352,7 +352,8 @@ class handTracker_image_only(VideoTransformerBase):
                 min_height = min_height-50
                 max_height = max_height+50
                 cropped_image = frame[min_height:max_height, min_width:max_width]
-                cropped_image = av.VideoFrame.from_ndarray(frame, format="bgr24")
+                #cropped_image = av.VideoFrame.from_ndarray(frame, format="bgr24")
+                cropped_image = resize(cropped_image, [256,256])
                 prediction = self.model.predict(np.expand_dims(cropped_image, axis=0))
                 self.new_y_pred = prediction_postprocessor(prediction, 'Hands_Only_Resnet50')
                 if self.new_y_pred == self.y_pred:
@@ -403,7 +404,7 @@ class handTracker_image_only(VideoTransformerBase):
 
         #frame = cv2.flip(frame, 1)
 
-        return av.VideoFrame.from_ndarray(frame, format="bgr24")
+        return av.VideoFrame.from_ndarray(frame, format="rgb24")
 
 class handTracker_concat(VideoTransformerBase):
     def __init__(self, mode=False, maxHands=1, detectionCon=0.8,modelComplexity=1,trackCon=0.5):
@@ -488,6 +489,7 @@ class handTracker_concat(VideoTransformerBase):
                     max_height = frame.shape[0]
                 cropped_image = frame[min_height:max_height, min_width:max_width]
                 resized_image = resize(cropped_image, [96,96])
+                resized_image = av.VideoFrame.from_ndarray(frame, format="bgr24")
                 prediction = self.model.predict((keypoints_df, np.expand_dims(resized_image, axis=0)))
                 self.new_y_pred = prediction_postprocessor(prediction, 'Concatenated__keypoints_images')
                 if self.new_y_pred == self.y_pred:
