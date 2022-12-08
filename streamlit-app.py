@@ -6,8 +6,19 @@ import only_hands
 from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
 from tensorflow.keras import models
 
-if 'word' not in st.session_state:
-    st.session_state['word'] = 'a'
+def add_bg_from_url():
+    st.markdown(
+         f"""
+         <style>
+         .stApp {{
+             background-image: url("https://cdn.pixabay.com/photo/2019/04/24/11/27/flowers-4151900_960_720.jpg");
+             background-attachment: fixed;
+             background-size: cover
+         }}
+         </style>
+         """,
+         unsafe_allow_html=True
+     )
 
 st.set_page_config(page_title="UNS🤏UNDED",
                    page_icon="👂",
@@ -26,15 +37,7 @@ col1, col2, col3 = st.columns(3)
 
 #Header with 3 columns to center image
 with col1:
-    st.markdown(
-        f"""
-        <style>
-        p {
-        background-color: "#0014DC");
-        }
-        </style>
-        """,
-        unsafe_allow_html=True)
+    add_bg_from_url()
 
 with col2:
     st.image('data/unsounded.png')
