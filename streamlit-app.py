@@ -207,21 +207,23 @@ with tab2:
 
 
                """)
-    tab8, tab9, tab10 = st.tabs(['The input image', 'The output of a cropped image of a hand', 'The output of the keypoints'])
 
-    with tab8:
+    with st.container('Check the process!'):
+        tab8, tab9, tab10 = st.tabs(['The input image', 'The output of a cropped image of a hand', 'The output of the keypoints'])
 
-        st.image('data/input_picture.png')
+        with tab8:
 
-    with tab9:
+            st.image('data/input_picture.png')
 
-        st.image('data/cropped_hand_without_keypoints.png')
+        with tab9:
 
-    with tab10:
+            st.image('data/cropped_hand_without_keypoints.png')
 
-        st.image('data/cropped_hand_with_keypoints.png')
+        with tab10:
 
-    st.subheader('Our mediapipe implementation')
+            st.image('data/cropped_hand_with_keypoints.png')
+
+        st.subheader('Our mediapipe implementation')
 
     mediapipe_code = """
     class handTracker():
