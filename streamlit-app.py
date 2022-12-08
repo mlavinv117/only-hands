@@ -12,11 +12,11 @@ st.set_page_config(page_title="UNS🤏UNDED",
                    initial_sidebar_state="auto",
                    menu_items=None)
 
-def local_css(file_name):
-    with open(file_name) as f:
-        st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
+# def local_css(file_name):
+#     with open(file_name) as f:
+#         st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
 
-local_css("style.css")
+# local_css("style.css")
 
 with st.sidebar:
     keypoints_checkbox = st.checkbox('Show keypoints', value=True)

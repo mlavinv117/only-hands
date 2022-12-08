@@ -151,6 +151,23 @@ class handTracker(VideoTransformerBase):
                                 color = (255, 0, 0),
                                 thickness = 2,)
 
+            width  = frame.shape[1]   # float `width`
+            height = frame.shape[0]
+
+            frame = cv2.rectangle(frame,
+                                    (0, height - 50),
+                                    (width, height),
+                                    (255, 255, 255),
+                                    -1)
+
+            frame = cv2.putText(frame,
+                                self.word,
+                                org = (avg_w, height - 25),
+                                fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+                                fontScale = 1,
+                                color = (255, 0, 0),
+                                thickness = 2,)
+
         #frame = cv2.flip(frame, 1)
 
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
@@ -218,7 +235,26 @@ class handTracker_nodraw(VideoTransformerBase):
                                 color = (255, 0, 0),
                                 thickness = 2,)
 
-            frame = cv2.flip(frame, 1)
+
+
+            width  = frame.shape[1]   # float `width`
+            height = frame.shape[0]
+
+            frame = cv2.rectangle(frame,
+                                    (0, height - 50),
+                                    (width, height),
+                                    (255, 255, 255),
+                                    -1)
+
+            frame = cv2.putText(frame,
+                                self.word,
+                                org = (avg_w, height - 25),
+                                fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+                                fontScale = 1,
+                                color = (255, 0, 0),
+                                thickness = 2,)
+
+            #frame = cv2.flip(frame, 1)
 
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
 
@@ -320,6 +356,23 @@ class handTracker_image_only(VideoTransformerBase):
             frame = cv2.putText(frame,
                                 self.y_pred,
                                 org = (avg_w, min_h - 25),
+                                fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+                                fontScale = 1,
+                                color = (255, 0, 0),
+                                thickness = 2,)
+
+            width  = frame.shape[1]   # float `width`
+            height = frame.shape[0]
+
+            frame = cv2.rectangle(frame,
+                                    (0, height - 50),
+                                    (width, height),
+                                    (255, 255, 255),
+                                    -1)
+
+            frame = cv2.putText(frame,
+                                self.word,
+                                org = (avg_w, height - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
                                 color = (255, 0, 0),
@@ -428,6 +481,23 @@ class handTracker_concat(VideoTransformerBase):
             frame = cv2.putText(frame,
                                 self.y_pred,
                                 org = (avg_w, min_h - 25),
+                                fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+                                fontScale = 1,
+                                color = (255, 0, 0),
+                                thickness = 2,)
+
+            width  = frame.shape[1]   # float `width`
+            height = frame.shape[0]
+
+            frame = cv2.rectangle(frame,
+                                    (0, height - 50),
+                                    (width, height),
+                                    (255, 255, 255),
+                                    -1)
+
+            frame = cv2.putText(frame,
+                                self.word,
+                                org = (avg_w, height - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
                                 color = (255, 0, 0),
