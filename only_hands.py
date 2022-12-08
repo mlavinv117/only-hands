@@ -161,7 +161,7 @@ class handTracker(VideoTransformerBase):
                                     -1)
 
             frame = cv2.putText(frame,
-                                self.word,
+                                ''.join(self.word),
                                 org = (avg_w, height - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
@@ -247,7 +247,7 @@ class handTracker_nodraw(VideoTransformerBase):
                                     -1)
 
             frame = cv2.putText(frame,
-                                self.word,
+                                ''.join(self.word),
                                 org = (avg_w, height - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
@@ -371,7 +371,7 @@ class handTracker_image_only(VideoTransformerBase):
                                     -1)
 
             frame = cv2.putText(frame,
-                                self.word,
+                                ''.join(self.word),
                                 org = (avg_w, height - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
@@ -496,7 +496,7 @@ class handTracker_concat(VideoTransformerBase):
                                     -1)
 
             frame = cv2.putText(frame,
-                                self.word,
+                                ''.join(self.word),
                                 org = (avg_w, height - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
