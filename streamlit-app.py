@@ -110,5 +110,7 @@ with tab2:
                Have you ever seen the movie "The sound of metal" by Darius Marder? In one sentence, it is about
                a heavy-metal drummer's life is thrown into freefall when he begins to lose his hearing. The
                struggle of a person losing so important motivated us to develop Unsounded, an app that can teach you
-               to learn to spell letters in sign language')
+               to learn to spell letters in sign language.
                """)
+
+    st.markdown("FACT: Around 70 million people are deaf globally")
