@@ -26,7 +26,15 @@ col1, col2, col3 = st.columns(3)
 
 #Header with 3 columns to center image
 with col1:
-    st.write(' ')
+    st.markdown(
+        f"""
+        <style>
+        p {
+        background-color: "##0014DC");
+        }
+        </style>
+        """,
+        unsafe_allow_html=True)
 
 with col2:
     st.image('data/unsounded.png')
