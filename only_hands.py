@@ -113,14 +113,15 @@ class handTracker(VideoTransformerBase):
         frame = frame.to_ndarray(format="bgr24")
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
+        self.counter+=1
         if len(keypoints)==21:
-            self.counter+=1
+
             keypoints, avg_w, min_h = keypoints_preprocessor(keypoints)
             if min_h-25 <= 0:
                 min_h = 50
             if avg_w-25 <= 0:
                 avg_w = 50
-            if self.counter % 30 == 0:
+            if self.counter % 20 == 0:
                 prediction = self.model.predict(keypoints)
                 self.new_y_pred = prediction_postprocessor(prediction, 'NN_from_keypoints')
                 if self.new_y_pred == self.y_pred:
@@ -167,6 +168,13 @@ class handTracker(VideoTransformerBase):
                                 fontScale = 1,
                                 color = (255, 0, 0),
                                 thickness = 2,)
+
+        else:
+            if self.counter % 30 == 0:
+                self.no_hand_counter+=1
+                if self.no_hand_counter==3:
+                    self.word = []
+                    self.no_hand_counter=0
 
         #frame = cv2.flip(frame, 1)
 
@@ -305,14 +313,14 @@ class handTracker_image_only(VideoTransformerBase):
         frame = frame.to_ndarray(format="bgr24")
         frame = self.handsFinder(frame)
         keypoints = self.positionFinder(frame)
+        self.counter+=1
         if len(keypoints)==21:
-            self.counter+=1
             keypoints_df, avg_w, min_h = keypoints_preprocessor(keypoints)
             if min_h-25 <= 0:
                 min_h = 50
             if avg_w-25 <= 0:
                 avg_w = 50
-            if self.counter % 30 == 0:
+            if self.counter % 20 == 0:
                 max_width = 0
                 min_width = 1000000
                 max_height = 0
@@ -377,6 +385,12 @@ class handTracker_image_only(VideoTransformerBase):
                                 fontScale = 1,
                                 color = (255, 0, 0),
                                 thickness = 2,)
+        else:
+            if self.counter % 30 == 0:
+                self.no_hand_counter+=1
+                if self.no_hand_counter==3:
+                    self.word = []
+                    self.no_hand_counter=0
 
         #frame = cv2.flip(frame, 1)
 
@@ -437,7 +451,7 @@ class handTracker_concat(VideoTransformerBase):
                 min_h = 50
             if avg_w-25 <= 0:
                 avg_w = 50
-            if self.counter % 30 == 0:
+            if self.counter % 20 == 0:
                 max_width = 0
                 min_width = 1000000
                 max_height = 0
@@ -515,9 +529,9 @@ class handTracker_concat(VideoTransformerBase):
         else:
             if self.counter % 30 == 0:
                 self.no_hand_counter+=1
-                if self.no_hand_counter==4:
+                if self.no_hand_counter==3:
                     self.word = []
-                    self.no_hand_counter+=0
+                    self.no_hand_counter=0
 
         #frame = cv2.flip(frame, 1)
 
