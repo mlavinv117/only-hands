@@ -211,7 +211,7 @@ with tab2:
 
     with tab8:
 
-        st.image('data/input_image.png')
+        st.image('data/input_picture.png')
 
     with tab9:
 
