@@ -121,7 +121,7 @@ class handTracker(VideoTransformerBase):
                 min_h = 50
             if avg_w-25 <= 0:
                 avg_w = 50
-            if self.counter % 20 == 0:
+            if self.counter % 15 == 0:
                 prediction = self.model.predict(keypoints)
                 self.new_y_pred = prediction_postprocessor(prediction, 'NN_from_keypoints')
                 if self.new_y_pred == self.y_pred:
@@ -170,7 +170,7 @@ class handTracker(VideoTransformerBase):
                                 thickness = 2,)
 
         else:
-            if self.counter % 30 == 0:
+            if self.counter % 20 == 0:
                 self.no_hand_counter+=1
                 if self.no_hand_counter==3:
                     print('ok')
@@ -281,6 +281,7 @@ class handTracker_image_only(VideoTransformerBase):
         self.word = []
         self.counter = 0
         self.same_letter_counter = 0
+        self.no_hand_counter = 0
         self.model = load_model_from_cache('Hands_Only_Resnet50')
         self.y_pred = ''
 
@@ -321,7 +322,7 @@ class handTracker_image_only(VideoTransformerBase):
                 min_h = 50
             if avg_w-25 <= 0:
                 avg_w = 50
-            if self.counter % 20 == 0:
+            if self.counter % 15 == 0:
                 max_width = 0
                 min_width = 1000000
                 max_height = 0
@@ -387,7 +388,7 @@ class handTracker_image_only(VideoTransformerBase):
                                 color = (255, 0, 0),
                                 thickness = 2,)
         else:
-            if self.counter % 30 == 0:
+            if self.counter % 20 == 0:
                 self.no_hand_counter+=1
                 if self.no_hand_counter==3:
                     self.word = []
@@ -452,7 +453,7 @@ class handTracker_concat(VideoTransformerBase):
                 min_h = 50
             if avg_w-25 <= 0:
                 avg_w = 50
-            if self.counter % 20 == 0:
+            if self.counter % 15 == 0:
                 max_width = 0
                 min_width = 1000000
                 max_height = 0
@@ -528,7 +529,7 @@ class handTracker_concat(VideoTransformerBase):
                                 color = (255, 0, 0),
                                 thickness = 2,)
         else:
-            if self.counter % 30 == 0:
+            if self.counter % 20 == 0:
                 self.no_hand_counter+=1
                 if self.no_hand_counter==3:
                     self.word = []
