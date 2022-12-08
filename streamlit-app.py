@@ -6,19 +6,11 @@ import only_hands
 from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
 from tensorflow.keras import models
 
-def add_bg_from_url():
-    st.markdown(
-         f"""
-         <style>
-         .stApp {{
-             background-image: url("https://cdn.pixabay.com/photo/2019/04/24/11/27/flowers-4151900_960_720.jpg");
-             background-attachment: fixed;
-             background-size: cover
-         }}
-         </style>
-         """,
-         unsafe_allow_html=True
-     )
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
+
+local_css("style.css")
 
 st.set_page_config(page_title="UNS🤏UNDED",
                    page_icon="👂",
