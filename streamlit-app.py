@@ -227,7 +227,7 @@ with tab2:
 
             st.image('data/keypoints_reference.png')
 
-        st.subheader('Our mediapipe implementation')
+    st.subheader('Our mediapipe implementation')
 
     mediapipe_code = """
     class handTracker():
