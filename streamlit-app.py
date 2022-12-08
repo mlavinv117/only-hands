@@ -29,13 +29,13 @@ col1, col2, col3 = st.columns(3)
 
 #Header with 3 columns to center image
 with col1:
-    add_bg_from_url()
+    pass
 
 with col2:
     st.image('data/unsounded.png')
 
 with col3:
-    st.write(' ')
+    pass
 
 
 tab1, tab2 = st.tabs(['App', 'Reference'])
