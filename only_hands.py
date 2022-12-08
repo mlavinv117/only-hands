@@ -173,6 +173,7 @@ class handTracker(VideoTransformerBase):
             if self.counter % 30 == 0:
                 self.no_hand_counter+=1
                 if self.no_hand_counter==3:
+                    print('ok')
                     self.word = []
                     self.no_hand_counter=0
 
