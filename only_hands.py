@@ -155,14 +155,14 @@ class handTracker(VideoTransformerBase):
             height = frame.shape[0]
 
             frame = cv2.rectangle(frame,
-                                    (0, height - 100),
+                                    (0, height - 50),
                                     (width, height),
                                     (255, 255, 255),
                                     -1)
 
             frame = cv2.putText(frame,
                                 ''.join(self.word),
-                                org = (avg_w, height - 50),
+                                org = (int(round(width/2,0)), height - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
                                 color = (255, 0, 0),
@@ -241,14 +241,14 @@ class handTracker_nodraw(VideoTransformerBase):
             height = frame.shape[0]
 
             frame = cv2.rectangle(frame,
-                                    (0, height - 100),
+                                    (0, height - 50),
                                     (width, height),
                                     (255, 255, 255),
                                     -1)
 
             frame = cv2.putText(frame,
                                 ''.join(self.word),
-                                org = (avg_w, height - 50),
+                                org = (int(round(width/2,0)), height - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
                                 color = (255, 0, 0),
@@ -365,14 +365,14 @@ class handTracker_image_only(VideoTransformerBase):
             height = frame.shape[0]
 
             frame = cv2.rectangle(frame,
-                                    (0, height - 100),
+                                    (0, height - 50),
                                     (width, height),
                                     (255, 255, 255),
                                     -1)
 
             frame = cv2.putText(frame,
                                 ''.join(self.word),
-                                org = (avg_w, height - 50),
+                                org = (int(round(width/2,0)), height - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
                                 color = (255, 0, 0),
@@ -490,14 +490,14 @@ class handTracker_concat(VideoTransformerBase):
             height = frame.shape[0]
 
             frame = cv2.rectangle(frame,
-                                    (0, height - 100),
+                                    (0, height - 50),
                                     (width, height),
                                     (255, 255, 255),
                                     -1)
 
             frame = cv2.putText(frame,
                                 ''.join(self.word),
-                                org = (avg_w, height - 50),
+                                org = (int(round(width/2,0)), height - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
                                 color = (255, 0, 0),
