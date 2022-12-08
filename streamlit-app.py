@@ -19,7 +19,7 @@ with st.sidebar:
     keypoints_checkbox = st.checkbox('Show keypoints', value=True)
     model_options = st.selectbox(
     'Select a model',
-    ('NN from keypoints','Concatenated model keypoints + images'))
+    ('NN from keypoints','Resnet50 from images','Concatenated model keypoints + images'))
 
 #st.set_page_config(layout='wide')
 col1, col2, col3 = st.columns(3)
@@ -68,6 +68,15 @@ with tab1:
                 rtc_configuration=RTC_CONFIGURATION,
                 media_stream_constraints={"video": True, "audio": False},
                 video_processor_factory=only_hands.handTracker_nodraw,
+                async_processing=True,)
+
+        elif not keypoints_checkbox and model_options=='Resnet50 from images':
+            webrtc_ctx = webrtc_streamer(
+                key="WYH",
+                mode=WebRtcMode.SENDRECV,
+                rtc_configuration=RTC_CONFIGURATION,
+                media_stream_constraints={"video": True, "audio": False},
+                video_processor_factory=only_hands.handTracker_image_only,
                 async_processing=True,)
 
         elif not keypoints_checkbox and model_options=='Concatenated model keypoints + images':

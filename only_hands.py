@@ -39,7 +39,7 @@ def keypoints_preprocessor(keypoints):
     return data_df, avg_w, min_h
 
 def prediction_postprocessor(prediction, model_name):
-    if model_name=='NN_from_keypoints':
+    if (model_name=='NN_from_keypoints') or (model_name=='Hands_Only_Resnet50'):
         nums_to_letters = {
         0:'A',1:'B',2:'C',3:'D',4:'E',5:'F',6:'G',
         7:'H',8:'I',9:'J',10:'K',11:'L',12:'M',
@@ -222,7 +222,114 @@ class handTracker_nodraw(VideoTransformerBase):
 
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
 
-class handTracker_concat(VideoTransformerBase):
+class handTracker_image_only(VideoTransformerBase):
+    def __init__(self, mode=False, maxHands=1, detectionCon=0.5,modelComplexity=1,trackCon=0.5):
+        self.mode = mode
+        self.maxHands = maxHands
+        self.detectionCon = detectionCon
+        self.modelComplex = modelComplexity
+        self.trackCon = trackCon
+        self.mpHands = mp.solutions.hands
+        self.hands = self.mpHands.Hands(self.mode, self.maxHands,self.modelComplex,
+                                        self.detectionCon, self.trackCon)
+        self.mpDraw = mp.solutions.drawing_utils
+        self.word = []
+        self.counter = 0
+        self.same_letter_counter = 0
+        self.model = load_model_from_cache('Hands_Only_Resnet50')
+        self.y_pred = ''
+
+    def handsFinder(self,image,draw=False):
+        imageRGB = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+        self.results = self.hands.process(imageRGB)
+
+        if self.results.multi_hand_landmarks:
+            for handLms in self.results.multi_hand_landmarks:
+
+                if draw:
+                    self.mpDraw.draw_landmarks(image, handLms, self.mpHands.HAND_CONNECTIONS)
+        return image
+
+    def positionFinder(self,image, handNo=0, draw=False):
+        lmlist = []
+        if self.results.multi_hand_landmarks:
+            Hand = self.results.multi_hand_landmarks[handNo]
+            for id, lm in enumerate(Hand.landmark):
+                h,w,c = image.shape
+                cx,cy = int(lm.x*w), int(lm.y*h)
+                lmlist.append([id,cx,cy])
+            if draw:
+                cv2.circle(image,(cx,cy), 5 , (255,0,255), cv2.FILLED)
+
+        return lmlist
+
+    def recv(self, frame):
+        #if 'word' not in st.session_state:
+        # #    st.session_state['word'] = 'a'
+        frame = frame.to_ndarray(format="bgr24")
+        frame = self.handsFinder(frame)
+        keypoints = self.positionFinder(frame)
+        if len(keypoints)==21:
+            self.counter+=1
+            keypoints_df, avg_w, min_h = keypoints_preprocessor(keypoints)
+            if min_h-25 <= 0:
+                min_h = 50
+            if avg_w-25 <= 0:
+                avg_w = 50
+            if self.counter % 30 == 0:
+                max_width = 0
+                min_width = 1000000
+                max_height = 0
+                min_height = 1000000
+                for point in keypoints:
+                    if point[1]>max_width:
+                        max_width=point[1]
+                    if point[1]<min_width:
+                        min_width=point[1]
+                    if point[2]>max_height:
+                        max_height=point[2]
+                    if point[2]<min_height:
+                        min_height=point[2]
+                min_width = min_width-50
+                max_width = max_width+50
+                min_height = min_height-50
+                max_height = max_height+50
+                cropped_image = frame[min_height:max_height, min_width:max_width]
+                prediction = self.model.predict(np.expand_dims(cropped_image, axis=0))
+                self.new_y_pred = prediction_postprocessor(prediction, 'Hands_Only_Resnet50')
+                if self.new_y_pred == self.y_pred:
+                    self.same_letter_counter+=1
+                else:
+                    self.same_letter_counter = 0
+
+                self.y_pred = self.new_y_pred
+
+                if self.same_letter_counter == 3:
+                    self.word.append(self.y_pred)
+                    with lock:
+                        if len(self.word)>0:
+                            word_container["word"] = ''.join(self.word)
+                        else:
+                            word_container["word"] = ''
+                    self.same_letter_counter = 0
+            frame = cv2.rectangle(frame,
+                                    (avg_w -5, min_h - 50),
+                                    (avg_w + 25, min_h - 20),
+                                    (255, 255, 255),
+                                    -1)
+            frame = cv2.putText(frame,
+                                self.y_pred,
+                                org = (avg_w, min_h - 25),
+                                fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+                                fontScale = 1,
+                                color = (255, 0, 0),
+                                thickness = 2,)
+
+        #frame = cv2.flip(frame, 1)
+
+        return av.VideoFrame.from_ndarray(frame, format="bgr24")
+
+    class handTracker_concat(VideoTransformerBase):
     def __init__(self, mode=False, maxHands=1, detectionCon=0.5,modelComplexity=1,trackCon=0.5):
         self.mode = mode
         self.maxHands = maxHands
