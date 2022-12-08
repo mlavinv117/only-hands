@@ -383,7 +383,7 @@ class handTracker_image_only(VideoTransformerBase):
         return av.VideoFrame.from_ndarray(frame, format="bgr24")
 
 class handTracker_concat(VideoTransformerBase):
-    def __init__(self, mode=False, maxHands=1, detectionCon=0.5,modelComplexity=1,trackCon=0.5):
+    def __init__(self, mode=False, maxHands=1, detectionCon=0.8,modelComplexity=1,trackCon=0.5):
         self.mode = mode
         self.maxHands = maxHands
         self.detectionCon = detectionCon
@@ -454,6 +454,14 @@ class handTracker_concat(VideoTransformerBase):
                 max_width = max_width+50
                 min_height = min_height-50
                 max_height = max_height+50
+                if min_width < 0:
+                    min_width=0
+                if min_height < 0:
+                    min_height=0
+                if max_width > frame.shape[1]:
+                    max_width = frame.shape[1]
+                if max_height > frame.shape[0]:
+                    max_height = frame.shape[0]
                 cropped_image = frame[min_height:max_height, min_width:max_width]
                 resized_image = resize(cropped_image, [96,96])
                 prediction = self.model.predict((keypoints_df, np.expand_dims(resized_image, axis=0)))
@@ -496,6 +504,7 @@ class handTracker_concat(VideoTransformerBase):
                                     -1)
 
             frame = cv2.putText(frame,
+                                len_word =
                                 ''.join(self.word),
                                 org = (int(round(width/2,0)), height - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
