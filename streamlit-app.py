@@ -97,4 +97,5 @@ with tab1:
                 async_processing=True,)
 
     with col5:
+        st.write('Try to make the signs to create your favorite word!')
         st.image('data/amer_sign2.png')
