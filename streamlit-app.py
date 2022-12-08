@@ -5,6 +5,7 @@ import mediapipe as mp
 import only_hands
 from streamlit_webrtc import webrtc_streamer, WebRtcMode, RTCConfiguration
 from tensorflow.keras import models
+import platform
 
 st.set_page_config(page_title="UNS🤏UNDED",
                    page_icon="👂",
@@ -12,11 +13,11 @@ st.set_page_config(page_title="UNS🤏UNDED",
                    initial_sidebar_state="auto",
                    menu_items=None)
 
-# def local_css(file_name):
-#     with open(file_name) as f:
-#         st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
+def local_css(file_name):
+    with open(file_name) as f:
+        st.markdown('<style>{}</style>'.format(f.read()), unsafe_allow_html=True)
 
-# local_css("style.css")
+local_css("style.css")
 
 with st.sidebar:
     keypoints_checkbox = st.checkbox('Show keypoints', value=True)
@@ -46,15 +47,26 @@ with tab1:
 
     with col4:
 
-        RTC_CONFIGURATION = RTCConfiguration(
-            {
-                "iceServers": [{
-                    "urls": ["turn:openrelay.metered.ca:80"],
-                    "username": "openrelayproject",
-                    "credential": "openrelayproject",
-                    }]
-                }
-            )
+        if type(platform.processor()) == str:
+            RTC_CONFIGURATION = RTCConfiguration(
+                {
+                    "iceServers": [{
+                        "urls": ["stun:stun.l.google.com:19302"],
+                        "username": "openrelayproject",
+                        "credential": "openrelayproject",
+                        }]
+                    }
+                )
+        else:
+            RTC_CONFIGURATION = RTCConfiguration(
+                {
+                    "iceServers": [{
+                        "urls": ["turn:openrelay.metered.ca:80"],
+                        "username": "openrelayproject",
+                        "credential": "openrelayproject",
+                        }]
+                    }
+                )
         if keypoints_checkbox and model_options=='NN from keypoints':
             webrtc_ctx = webrtc_streamer(
                 key="WYH",
