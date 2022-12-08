@@ -113,4 +113,4 @@ with tab2:
                to learn to spell letters in sign language.
                """)
 
-    st.info("FACT: Around 70 million people are deaf globally")
+    st.info("**FACT**: Around 70 million people are deaf globally")
