@@ -207,12 +207,25 @@ with tab2:
 
 
                """)
+    tab8, tab9, tab10 = st.tabs['The input image', 'The output of a cropped image of a hand', 'The output of the keypoints']
+
+    with tab8:
+
+        st.image('data/input_image.png')
+
+    with tab9:
+
+        st.image('data/cropped_hand_without_keypoints.png')
+
+    with tab10:
+
+        st.image('data/cropped_hand_with_keypoints.png')
 
     st.subheader('Our mediapipe implementation')
 
     mediapipe_code = """
     class handTracker():
-    def __init__(self, letter, *, mode=False, maxHands=2, detectionCon=0.5,modelComplexity=1,trackCon=0.5, samples=100):
+    def __init__(self, mode=False, maxHands=1, detectionCon=0.5,modelComplexity=1,trackCon=0.5):
         self.mode = mode
         self.maxHands = maxHands
         self.detectionCon = detectionCon
@@ -222,8 +235,6 @@ with tab2:
         self.hands = self.mpHands.Hands(self.mode, self.maxHands,self.modelComplex,
                                         self.detectionCon, self.trackCon)
         self.mpDraw = mp.solutions.drawing_utils
-        self.letter = letter
-        self.samples = samples
 
     def handsFinder(self,image,draw=True):
         imageRGB = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
@@ -250,3 +261,11 @@ with tab2:
         return lmlist
     """
     st.code(mediapipe_code, language='python')
+
+    st.caption("""
+               Above is the main Python class through which we implemented mediapipe package to extract both a picture of a hand and its corresponding keypoints.
+               It is composed by a constructor (__init__) and two functions: handsFinder and positionFinder. Both functions take a picture as an input.
+               The first function, handsFinder, will return the input image with the keypoints on top of the found image. The second function, positionFinder, will
+               return a list of the keypoint found and the height, width coordinates for each of them.
+
+               """)
