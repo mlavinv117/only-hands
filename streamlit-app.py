@@ -413,6 +413,6 @@ with tab2:
 
     print(results)
     """
-    st.code(code=nn_code, language='python')
+    st.code(nn_code, language='python')
 
     #st.warning("Notice the quotes on the word 'simple' on the paragrah above. This was actually not the simplest posible approach. We already had a feeling that")
