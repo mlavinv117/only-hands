@@ -441,9 +441,50 @@ print(results)
     accuracy of 0.98 on the test set. Awesome!\n
     The advantage of this model is that it was very fast to train, it is very fast in deployment and performs great independently of the background and ligt settings
     of the room you are in when using the app. \n
-    The disadvantages are that it is not robust enough to perfectly distinguis between some pair of letters, for example, it does not do a great job between A and S, or
+    The disadvantage is that it is not robust enough to perfectly distinguish between some pair of letters, for example, it does not do a great job between A and S, or
     between R and U (check for yourself!).\n
     We then decided to try with a more complex model: a Convolutional Neural Network that could deal directly with the image!
 
                """)
     #st.warning("Notice the quotes on the word 'simple' on the paragrah above. This was actually not the simplest posible approach. We already had a feeling that")
+
+    st.header('The CNN model (Resnet50)')
+
+    st.subheader('Data preparation')
+
+    st.caption("""
+    Lore ipsum
+               """)
+
+    st.subheader('Model design')
+
+    cnn_code = ("""
+    Lore ipsum
+
+               """)
+
+    st.code(nn_code, language='python')
+
+    st.caption("""
+    Lore ipsum
+               """)
+
+    st.header('The concatenated model')
+
+    st.subheader('Data preparation')
+
+    st.caption("""
+    Lore ipsum
+               """)
+
+    st.subheader('Model design')
+
+    concat_code = ("""
+    Lore ipsum
+               """)
+
+    st.code(concat_code, language='python')
+
+    st.caption("""
+    Lore ipsum
+               """)
