@@ -463,7 +463,7 @@ print(results)
 
                """)
 
-    st.code(nn_code, language='python')
+    st.code(cnn_code, language='python')
 
     st.caption("""
     Lore ipsum
