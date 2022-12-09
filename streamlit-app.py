@@ -343,75 +343,72 @@ with tab2:
     st.subheader('Model design')
 
     nn_code = """
-    import pandas as pd
-    from google.colab import drive
-    from sklearn.model_selection import train_test_split
-    from tensorflow.keras import layers
-    from tensorflow.keras import models
-    from tensorflow.keras.callbacks import EarlyStopping
-    from sklearn.preprocessing import OneHotEncoder
-    from mlxtend.plotting import plot_confusion_matrix
-    from sklearn.metrics import confusion_matrix
-    import matplotlib.pyplot as plt
-    import numpy as np
+import pandas as pd
+from google.colab import drive
+from sklearn.model_selection import train_test_split
+from tensorflow.keras import layers
+from tensorflow.keras import models
+from tensorflow.keras.callbacks import EarlyStopping
+from sklearn.preprocessing import OneHotEncoder
+from mlxtend.plotting import plot_confusion_matrix
+from sklearn.metrics import confusion_matrix
+import matplotlib.pyplot as plt
+import numpy as np
 
-    drive.mount('/content/drive')
-    path = '/content/drive/MyDrive/unsounded/data/own_data/'
+drive.mount('/content/drive')
+path = '/content/drive/MyDrive/unsounded/data/own_data/'
 
-    keypoints_df = pd.read_csv('keypoints.csv')
+keypoints_df = pd.read_csv('keypoints.csv')
 
-    X = keypoints_df.drop(columns=['letter'])
-    y = keypoints_df['letter']
+X = keypoints_df.drop(columns=['letter'])
+y = keypoints_df['letter']
 
-    X_train, X_test, y_train, y_test = train_test_split(X,
-                                                    y,
-                                                    test_size=0.3,
-                                                    random_state=0)
+X_train, X_test, y_train, y_test = train_test_split(X,
+                                                y,
+                                                test_size=0.3,
+                                                random_state=0)
 
-    ohe = OneHotEncoder(sparse=False)
-    y_train_cat = ohe.fit_transform(pd.DataFrame(y_train))
-    y_test_cat = ohe.transform(pd.DataFrame(y_test))
+ohe = OneHotEncoder(sparse=False)
+y_train_cat = ohe.fit_transform(pd.DataFrame(y_train))
+y_test_cat = ohe.transform(pd.DataFrame(y_test))
 
-    def initialize_model():
+def initialize_model():
 
-        model = models.Sequential()
+    model = models.Sequential()
 
-        model.add(layers.Normalization(input_dim=42))
-        model.add(layers.Dense(25, activation='relu'))
-        model.add(layers.Dense(50, activation='relu'))
-        model.add(layers.Dense(75, activation='relu'))
-        model.add(layers.Dense(100, activation='relu'))
-        model.add(layers.Dense(24, activation='softmax'))
+    model.add(layers.Normalization(input_dim=42))
+    model.add(layers.Dense(25, activation='relu'))
+    model.add(layers.Dense(50, activation='relu'))
+    model.add(layers.Dense(75, activation='relu'))
+    model.add(layers.Dense(100, activation='relu'))
+    model.add(layers.Dense(24, activation='softmax'))
 
-        return model
+    return model
 
-    def compile_model(model):
+def compile_model(model):
 
-        model.compile(loss='categorical_crossentropy',
-        optimizer='adam',
-        metrics=['accuracy'])
+    model.compile(loss='categorical_crossentropy',
+    optimizer='adam',
+    metrics=['accuracy'])
 
-        return model
+    return model
 
-    model = initialize_model()
-    model = compile_model(model)
+es = EarlyStopping(patience=20, restore_best_weights=True)
 
-    es = EarlyStopping(patience=20, restore_best_weights=True)
+model = initialize_model()
+model = compile_model(model)
 
-    model = initialize_model()
-    model = compile_model(model)
+history = model.fit(X_train,
+                    y_train_cat,
+                    validation_split = 0.2,
+                    epochs = 500,
+                    callbacks = [es],
+                    batch_size= 32,
+                    verbose = 1)
 
-    history = model.fit(X_train,
-                        y_train_cat,
-                        validation_split = 0.2,
-                        epochs = 500,
-                        callbacks = [es],
-                        batch_size= 32,
-                        verbose = 1)
+results = model.evaluate(X_test, y_test_cat)
 
-    results = model.evaluate(X_test, y_test_cat)
-
-    print(results)
+print(results)
     """
     st.code(nn_code, language='python')
 
