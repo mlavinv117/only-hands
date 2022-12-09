@@ -542,3 +542,143 @@ class handTracker_concat(VideoTransformerBase):
         #frame = cv2.flip(frame, 1)
 
         return av.VideoFrame.from_ndarray(frame, format="rgb24")
+
+class handTracker_concat_kp(VideoTransformerBase):
+    def __init__(self, mode=False, maxHands=1, detectionCon=0.8,modelComplexity=1,trackCon=0.5):
+        self.mode = mode
+        self.maxHands = maxHands
+        self.detectionCon = detectionCon
+        self.modelComplex = modelComplexity
+        self.trackCon = trackCon
+        self.mpHands = mp.solutions.hands
+        self.hands = self.mpHands.Hands(self.mode, self.maxHands,self.modelComplex,
+                                        self.detectionCon, self.trackCon)
+        self.mpDraw = mp.solutions.drawing_utils
+        self.word = []
+        self.counter = 0
+        self.same_letter_counter = 0
+        self.no_hand_counter = 0
+        self.model = load_model_from_cache('Concatenated__keypoints_images')
+        self.y_pred = ''
+
+    def handsFinder(self,image,draw=False):
+        imageRGB = cv2.cvtColor(image,cv2.COLOR_BGR2RGB)
+        self.results = self.hands.process(imageRGB)
+
+        if self.results.multi_hand_landmarks:
+            for handLms in self.results.multi_hand_landmarks:
+
+                if draw:
+                    self.mpDraw.draw_landmarks(image, handLms, self.mpHands.HAND_CONNECTIONS)
+        return image
+
+    def positionFinder(self,image, handNo=0, draw=False):
+        lmlist = []
+        if self.results.multi_hand_landmarks:
+            Hand = self.results.multi_hand_landmarks[handNo]
+            for id, lm in enumerate(Hand.landmark):
+                h,w,c = image.shape
+                cx,cy = int(lm.x*w), int(lm.y*h)
+                lmlist.append([id,cx,cy])
+            if draw:
+                cv2.circle(image,(cx,cy), 5 , (255,0,255), cv2.FILLED)
+
+        return lmlist
+
+    def recv(self, frame):
+        #if 'word' not in st.session_state:
+        # #    st.session_state['word'] = 'a'
+        frame = frame.to_ndarray(format="rgb24")
+        frame = self.handsFinder(frame)
+        keypoints = self.positionFinder(frame)
+        self.counter+=1
+        if len(keypoints)==21:
+            keypoints_df, avg_w, min_h = keypoints_preprocessor(keypoints)
+            if min_h-25 <= 0:
+                min_h = 50
+            if avg_w-25 <= 0:
+                avg_w = 50
+            if self.counter % 15 == 0:
+                max_width = 0
+                min_width = 1000000
+                max_height = 0
+                min_height = 1000000
+                for point in keypoints:
+                    if point[1]>max_width:
+                        max_width=point[1]
+                    if point[1]<min_width:
+                        min_width=point[1]
+                    if point[2]>max_height:
+                        max_height=point[2]
+                    if point[2]<min_height:
+                        min_height=point[2]
+                min_width = min_width-50
+                max_width = max_width+50
+                min_height = min_height-50
+                max_height = max_height+50
+                if min_width < 0:
+                    min_width=0
+                if min_height < 0:
+                    min_height=0
+                if max_width > frame.shape[1]:
+                    max_width = frame.shape[1]
+                if max_height > frame.shape[0]:
+                    max_height = frame.shape[0]
+                cropped_image = frame[min_height:max_height, min_width:max_width]
+                resized_image = resize(cropped_image, [96,96])
+                #resized_image = av.VideoFrame.from_ndarray(frame, format="bgr24")
+                prediction = self.model.predict((keypoints_df, np.expand_dims(resized_image, axis=0)))
+                self.new_y_pred = prediction_postprocessor(prediction, 'Concatenated__keypoints_images')
+                if self.new_y_pred == self.y_pred:
+                    self.same_letter_counter+=1
+                else:
+                    self.same_letter_counter = 0
+
+                self.y_pred = self.new_y_pred
+
+                if self.same_letter_counter == 3:
+                    self.word.append(self.y_pred)
+                    self.same_letter_counter = 0
+
+            frame = self.handsFinder(frame, draw=True)
+
+            frame = cv2.rectangle(frame,
+                                    (avg_w -5, min_h - 50),
+                                    (avg_w + 25, min_h - 20),
+                                    (255, 255, 255),
+                                    -1)
+            frame = cv2.putText(frame,
+                                self.y_pred,
+                                org = (avg_w, min_h - 25),
+                                fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+                                fontScale = 1,
+                                color = (0, 0, 255),
+                                thickness = 2,)
+
+            width  = frame.shape[1]   # float `width`
+            height = frame.shape[0]
+
+            frame = cv2.rectangle(frame,
+                                    (0, height - 50),
+                                    (width, height),
+                                    (255, 255, 255),
+                                    -1)
+            len_word = len(self.word)
+            word_center = int(round(width/2,0))+15-len_word*15
+            frame = cv2.putText(frame,
+                                ''.join(self.word),
+                                org = (word_center, height - 25),
+                                fontFace = cv2.FONT_HERSHEY_SIMPLEX,
+                                fontScale = 1,
+                                color = (0, 0, 255),
+                                thickness = 2,)
+        else:
+            if self.counter % 20 == 0:
+                self.no_hand_counter+=1
+                if self.no_hand_counter==3:
+                    self.word = []
+                    self.no_hand_counter=0
+
+        #frame = cv2.flip(frame, 1)
+
+        return av.VideoFrame.from_ndarray(frame, format="rgb24")

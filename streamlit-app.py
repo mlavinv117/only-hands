@@ -97,6 +97,15 @@ with tab1:
                 video_processor_factory=only_hands.handTracker_concat,
                 async_processing=True,)
 
+        elif keypoints_checkbox and model_options=='Concatenated model keypoints + images':
+            webrtc_ctx = webrtc_streamer(
+                key="WYH",
+                mode=WebRtcMode.SENDRECV,
+                rtc_configuration=RTC_CONFIGURATION,
+                media_stream_constraints={"video": True, "audio": False},
+                video_processor_factory=only_hands.handTracker_concat_kp,
+                async_processing=True,)
+
     with col5:
         st.write('Try to make the signs to create your favorite word!')
         st.image('data/amer_sign2.png')
@@ -343,6 +352,8 @@ with tab2:
     st.subheader('Model design')
 
     nn_code = """
+
+#Importing all the needed libraries
 import pandas as pd
 from google.colab import drive
 from sklearn.model_selection import train_test_split
@@ -355,23 +366,32 @@ from sklearn.metrics import confusion_matrix
 import matplotlib.pyplot as plt
 import numpy as np
 
+#Mounting Google Drive to retrieve the data
 drive.mount('/content/drive')
 path = '/content/drive/MyDrive/unsounded/data/own_data/'
 
+#Reading the keypoints DataFrame stored in a csv file with Pandas
 keypoints_df = pd.read_csv('keypoints.csv')
 
+#X represents the inputs that the model will use to predict a letter, i.e., the features of our model: 21 keypoints coordiantes (h,w) = 42 features
 X = keypoints_df.drop(columns=['letter'])
+
+#y is our target: the label that we want to predict = letter of the alphabet
 y = keypoints_df['letter']
 
+#Split the datasets into train and test set to avoid data leakage with 30% of the data in the test set
 X_train, X_test, y_train, y_test = train_test_split(X,
                                                 y,
                                                 test_size=0.3,
                                                 random_state=0)
 
+#Encoding the target to instead of having a single column with all letters, we have a column for each letter and 0 or 1 depending on if the keypoints correspond to the letter
 ohe = OneHotEncoder(sparse=False)
 y_train_cat = ohe.fit_transform(pd.DataFrame(y_train))
 y_test_cat = ohe.transform(pd.DataFrame(y_test))
 
+#Function to initialize our model. We used a sequential NN that starts by normalizing the data, 4 dense layers with increasing number of neurons and a final multi-classifier layer to
+#output the probability of each letter
 def initialize_model():
 
     model = models.Sequential()
@@ -385,6 +405,7 @@ def initialize_model():
 
     return model
 
+#Function to compile the model, we define the loss function for a categorical task, choose adam optimizer and measure the accuracy while training
 def compile_model(model):
 
     model.compile(loss='categorical_crossentropy',
@@ -393,11 +414,14 @@ def compile_model(model):
 
     return model
 
+#Defining an early stopping of the training process if after 20 epochs the performance has not improved
 es = EarlyStopping(patience=20, restore_best_weights=True)
 
+#Calling functions to initialize and compile the model
 model = initialize_model()
 model = compile_model(model)
 
+#Training the model with 20% validation split, 500 epochs stopping early, training on 32 by 32 sets of keypoints.
 history = model.fit(X_train,
                     y_train_cat,
                     validation_split = 0.2,
