@@ -116,7 +116,7 @@ with tab2:
 
     st.warning("**FACT**: Around 70 million people are deaf globally.")
 
-    st.header('The challange')
+    st.header('The challenge')
 
     st.caption("""
                Creating a Machine Learning model that detects the signs for the 26 different letters of the alphabet is

@@ -135,7 +135,7 @@ class handTracker(VideoTransformerBase):
                                 org = (avg_w, min_h - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
-                                color = (0, 0, 255),
+                                color = (255, 0, 0),
                                 thickness = 2,)
 
             width  = frame.shape[1]   # float `width`
@@ -152,7 +152,7 @@ class handTracker(VideoTransformerBase):
                                 org = (int(round(width/2,0)), height - 25),
                                 fontFace = cv2.FONT_HERSHEY_SIMPLEX,
                                 fontScale = 1,
-                                color = (0, 0, 255),
+                                color = (255, 0, 0),
                                 thickness = 2,)
 
         else:
